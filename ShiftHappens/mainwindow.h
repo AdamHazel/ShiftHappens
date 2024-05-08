@@ -36,6 +36,18 @@ private slots:
     void on_removeCustB_clicked();
     void on_newAssignB_clicked();
     void on_actionExit_triggered();
+    void on_actionImport_customers_triggered();
+
+    void on_actionImport_cars_triggered();
+
+    void on_actionCreate_templates_triggered();
+
+    void on_actionExport_customers_triggered();
+
+    void on_actionExport_cars_triggered();
+
+    void on_actionExport_all_triggered();
+
 private:
     Ui::MainWindow *ui;
 };

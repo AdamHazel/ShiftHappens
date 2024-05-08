@@ -4,8 +4,10 @@
 #include "addcustomer_d.h"
 #include "editcar_d.h"
 #include "editcustomer_d.h"
+#include "importExport.h"
 
 #include <QPushButton>
+#include <fstream>
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
@@ -147,5 +149,96 @@ void MainWindow::on_actionExit_triggered()
         std::exit(0);
     else
         return;
+}
+
+
+void MainWindow::on_actionImport_customers_triggered()
+{
+    importCustomers();
+    viewCustomers();
+}
+
+
+void MainWindow::on_actionImport_cars_triggered()
+{
+    importCars();
+    viewCars();
+}
+
+
+void MainWindow::on_actionCreate_templates_triggered()
+{
+    // Customers template
+    QString customersdesktopPath = QString("%1/customers_import.csv")
+                                       .arg(QStandardPaths::writableLocation(QStandardPaths::DesktopLocation));
+    QByteArray custDP = customersdesktopPath.toLocal8Bit();
+    const char* custPath = custDP.data();
+
+    std::ofstream customers;
+    customers.open(custPath);
+    customers << "name,street,postcode,city\n";
+    customers.close();
+
+    // Cars template
+    QString carsdesktopPath = QString("%1/cars_import.csv")
+                                  .arg(QStandardPaths::writableLocation(QStandardPaths::DesktopLocation));
+    QByteArray carsDP = carsdesktopPath.toLocal8Bit();
+    const char* carsPath = carsDP.data();
+
+    std::ofstream cars;
+    cars.open(carsPath);
+    cars << "RegNr,brand,model,year,custId\n";
+    cars.close();
+
+    QMessageBox confirmMsg;
+    confirmMsg.setWindowTitle("Templates created");
+    confirmMsg.setText("Templates saved to desktop.");
+    confirmMsg.setDetailedText("Templates can be used to import cars and customers.\n"
+                               "File type is .csv. Use commas (,) to separate values.\n"
+                               "To import files, save files to desktop.\n"
+                               "Each entry should have a new row.\n"
+                               "Incase non-number values with \"\" .\n");
+    confirmMsg.exec();
+}
+
+
+void MainWindow::on_actionExport_customers_triggered()
+{
+    auto count = exportCustomers();
+
+    if (count > 0 )
+    {
+        QMessageBox confirmMsg;
+        confirmMsg.setWindowTitle("Export confirmation");
+        confirmMsg.setText("Number of customers exported: " + QString::number(count));
+        confirmMsg.exec();
+    }
+}
+
+
+void MainWindow::on_actionExport_cars_triggered()
+{
+    auto count = exportCars();
+
+    if (count > 0 )
+    {
+        QMessageBox confirmMsg;
+        confirmMsg.setWindowTitle("Export confirmation");
+        confirmMsg.setText("Number of customers exported: " + QString::number(count));
+        confirmMsg.exec();
+    }
+}
+
+
+void MainWindow::on_actionExport_all_triggered()
+{
+    auto results = exportAll();
+
+    QMessageBox confirmMsg;
+    confirmMsg.setWindowTitle("Export confirmation");
+
+    confirmMsg.setText("Number of customers exported: " + QString::number(results.first) + "\n"
+                                                                                           "Number of cars exported: " + QString::number(results.second));
+    confirmMsg.exec();
 }
 

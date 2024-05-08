@@ -1,27 +1,23 @@
 #include "shiftdatabase.h"
+#include "customer.h"
+#include "car.h"
+
+#include <vector>
+#include <QMessageBox>
 
 shiftDatabase::shiftDatabase()
 {
     db = QSqlDatabase::addDatabase("QSQLITE");
     qDebug() << QDir::currentPath();
     db.setDatabaseName(QDir::currentPath() + "/shiftDatabase.db");
-
-    if(db.open())
-    {
-        qDebug() << "Database is open";
-        customer_createTable();
-        cars_createTable();
-        //test();
-        db.close();
-    }
-
-    else
-        qDebug() << "Database could not open: " << db.lastError();
+    customer_createTable();
+    cars_createTable();
 }
 
 // Creation of tables
 void shiftDatabase::customer_createTable()
 {
+    db.open();
     QSqlQuery createCustomers(db);
     createCustomers.prepare(" CREATE TABLE IF NOT EXISTS customers ("
                             " id INTEGER PRIMARY KEY AUTOINCREMENT,"
@@ -34,10 +30,12 @@ void shiftDatabase::customer_createTable()
         qDebug() << "Customer table created or exists already";
     else
         qDebug() << "Failed to add table" << db.lastError();
+    db.close();
 }
 
 void shiftDatabase::cars_createTable()
 {
+    db.open();
     QSqlQuery createCars(db);
     createCars.prepare("CREATE TABLE IF NOT EXISTS cars ("
                        "RegNr TEXT PRIMARY KEY,"
@@ -51,6 +49,7 @@ void shiftDatabase::cars_createTable()
         qDebug() << "Cars table created or exists already";
     else
         qDebug() << "Failed to add table" << db.lastError();
+    db.close();
 }
 
 // Finders
@@ -197,6 +196,80 @@ int shiftDatabase::cars_countEntries()
 }
 
 // Fetchers
+std::vector<customer> shiftDatabase::customer_fetchAll()
+{
+    std::vector<customer> customers;
+    db.open();
+
+    QSqlQuery fetchAll(db);
+    fetchAll.prepare("SELECT * FROM customers");
+    fetchAll.exec();
+    QSqlRecord rec = fetchAll.record();
+
+    qDebug() << "Number of columns: " << rec.count();
+
+    int idIndex = rec.indexOf("id");
+    int nameIndex = rec.indexOf("name");
+    int streetIndex = rec.indexOf("street");
+    int postcIndex = rec.indexOf("postcode");
+    int cityIndex = rec.indexOf("city");
+
+    while (fetchAll.next())
+    {
+        customer temp;
+        temp.id = fetchAll.value(idIndex).toInt();
+        temp.name = fetchAll.value(nameIndex).toString();
+        temp.street = fetchAll.value(streetIndex).toString();
+        temp.postcode = fetchAll.value(postcIndex).toInt();
+        temp.city = fetchAll.value(cityIndex).toString();
+        customers.push_back(temp);
+    }
+
+    qDebug() << "Finished fetching all rows in customers table";
+
+    db.close();
+
+    return customers;
+}
+
+std::vector<car> shiftDatabase::cars_fetchAll()
+{
+    std::vector<car> cars;
+    db.open();
+
+    QSqlQuery fetchAll(db);
+    fetchAll.prepare("SELECT * FROM cars");
+    fetchAll.exec();
+    QSqlRecord rec = fetchAll.record();
+
+    qDebug() << "Number of columns: " << rec.count();
+
+    int regIndex = rec.indexOf("RegNr");
+    int brandIndex = rec.indexOf("brand");
+    int modelIndex = rec.indexOf("model");
+    int yearIndex = rec.indexOf("year");
+    int custidIndex = rec.indexOf("custId");
+
+    while (fetchAll.next())
+    {
+        car temp;
+        temp.RegNr = fetchAll.value(regIndex).toString();
+        temp.brand = fetchAll.value(brandIndex).toString();
+        temp.model = fetchAll.value(modelIndex).toString();
+        temp.year = fetchAll.value(yearIndex).toInt();
+        if (fetchAll.value(custidIndex).isNull())
+            temp.custId = 0;
+        else
+            temp.custId = fetchAll.value(custidIndex).toInt();
+        cars.push_back(temp);
+    }
+
+    qDebug() << "Finished fetching all rows in customers table";
+    db.close();
+
+    return cars;
+}
+
 void shiftDatabase::cars_fetchById(QString& regNr, QString& brand, QString& model, uint& year){
     db.open();
     QSqlQuery query;
@@ -209,11 +282,11 @@ void shiftDatabase::cars_fetchById(QString& regNr, QString& brand, QString& mode
         model = query.value(1).toString();
         year = query.value(2).toUInt();
         db.close();
-        }
+    }
     else {
         qDebug() << "Car not found or query failed: " << db.lastError();
         db.close();
-        }
+    }
 }
 void shiftDatabase::customer_fetchById(uint& id, QString& name, QString& street, uint& postNum, QString& city)
 {
@@ -380,6 +453,7 @@ bool shiftDatabase::cars_updateByRegNr(QString *RegNr, QString *brand, QString *
     db.close();
     return confirm;
 }
+
 bool shiftDatabase::cars_removeByRegNr(QString *RegNr){
     bool executed = false;
     db.open();
@@ -425,40 +499,38 @@ bool shiftDatabase::customer_removeByID(uint *idChoice){
     return executed;
 }
 
-// For testing that the table works
-void shiftDatabase::test()
+
+// Droppers
+void shiftDatabase::customer_dropTable()
 {
     db.open();
-    QSqlDatabase::database().transaction();
 
-    qDebug() << "Query begun";
+    QSqlQuery query;
+    query.prepare("DROP TABLE customers");
+    query.exec();
 
-    QString RegNr = "TR 1234";
-    RegNr = RegNr.toUpper();
-    QString Model = "Kathe";
-    QString Brand = "BMW";
-    double dayPrice = 123.50;
-
-    QSqlQuery addCarQuery(db);
-    addCarQuery.prepare("INSERT into cars"
-                        "(RegNr, model, brand, dayPrice)"
-                        "VALUES"
-                        "(?, ?, ?, ?)");
-
-    addCarQuery.addBindValue(RegNr);
-    addCarQuery.addBindValue(Model);
-    addCarQuery.addBindValue(Brand);
-    addCarQuery.addBindValue(dayPrice);
-
-    if(addCarQuery.exec())
-    {
-        qDebug() << "Query executed";
-    }
-    else
-    {
-        qDebug() << "Query not executed" << db.lastError();
-    }
-
-    QSqlDatabase::database().commit();
     db.close();
+}
+void shiftDatabase::cars_dropTable()
+{
+    db.open();
+
+    QSqlQuery query;
+    query.prepare("DROP TABLE cars");
+    query.exec();
+
+    db.close();
+}
+
+// Resetters
+void shiftDatabase::customer_resetTable()
+{
+    customer_dropTable();
+    customer_createTable();
+}
+
+void shiftDatabase::cars_resetTable()
+{
+    cars_dropTable();
+    cars_createTable();
 }

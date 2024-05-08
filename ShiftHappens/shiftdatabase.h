@@ -1,7 +1,11 @@
 #ifndef SHIFTDATABASE_H
 #define SHIFTDATABASE_H
 
+#include "car.h"
+#include "customer.h"
+
 #include <QtSql>
+#include <vector>
 
 class shiftDatabase : public QObject
 {
@@ -26,6 +30,8 @@ public:
     int cars_countEntries();
 
     // Fetchers
+    std::vector<customer> customer_fetchAll();
+    std::vector<car> cars_fetchAll();
     void customer_fetchById(uint& id, QString& name, QString& street, uint& postNum, QString& city);
     void cars_fetchById(QString& regNr, QString& brand, QString& model, uint& year);
 
@@ -41,8 +47,13 @@ public:
     bool customer_removeByID(uint *idChoice);
     bool cars_removeByRegNr(QString *RegNr);
 
-    // Test
-    void test();
+    // Droppers
+    void customer_dropTable();
+    void cars_dropTable();
+
+    // Resetters
+    void customer_resetTable();
+    void cars_resetTable();
 };
 
 #endif // SHIFTDATABASE_H
