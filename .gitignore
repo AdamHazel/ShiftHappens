@@ -32,8 +32,6 @@ Makefile*
 *build*
 *.qm
 *.prl
-**/*.pro.user
-ShiftHappens/ShiftHappens.pro.user
 *.db
 
 # Qt unit tests
