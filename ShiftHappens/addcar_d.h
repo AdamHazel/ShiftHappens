@@ -19,6 +19,9 @@ public:
     explicit addCar_D(QWidget *parent = nullptr);
     ~addCar_D();
 
+protected:
+    shiftDatabase dataB;
+
 private slots:
     void on_buttonBox_accepted();
     void validateCar();

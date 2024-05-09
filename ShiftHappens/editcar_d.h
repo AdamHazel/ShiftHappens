@@ -17,6 +17,9 @@ class editCar_D: public QDialog
 public:
     explicit editCar_D(QString& regNr, QWidget *parent = nullptr);
     ~editCar_D();
+protected:
+    shiftDatabase dataB;
+
 private:
     Ui::editCar_D *ui;
 private slots:

@@ -35,7 +35,6 @@ void addCustomer_D::on_buttonBox_accepted(){
 
     qDebug() << custName << " " << custStreet <<" " << postNum << " " << custCity;
 
-    shiftDatabase db;
-    db.customer_add(&custName, &custStreet, &postNum, &custCity);
+    dataB.customer_add(&custName, &custStreet, &postNum, &custCity);
     QMessageBox::information(this, "Success!", "Customer " + custName + " added successfully");
 }

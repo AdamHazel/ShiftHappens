@@ -17,6 +17,9 @@ class editCustomer_D : public QDialog
 public:
     explicit editCustomer_D(uint& id, QWidget *parent = nullptr);
     ~editCustomer_D();
+protected:
+    shiftDatabase dataB;
+
 private:
     Ui::editCustomer_D *ui;
 private slots:

@@ -18,6 +18,7 @@ editCar_D::~editCar_D()
 {
     delete ui;
 }
+
 void editCar_D::validateCar(){
     bool validated =
         !ui->lineEdit_newBrand->text().isEmpty() &&
@@ -25,11 +26,10 @@ void editCar_D::validateCar(){
     ui->buttonBox->button(QDialogButtonBox::Ok)->setEnabled(validated);
 }
 void editCar_D::fetchCar(QString& regNr){
-    shiftDatabase db;
     QString brand, model;
     uint year;
 
-    (db.cars_fetchById(regNr, brand, model, year));
+    (dataB.cars_fetchById(regNr, brand, model, year));
         ui->lineEdit_oldRegNr->setText(regNr);
         ui->lineEdit_newRegNr->setText(regNr);
         ui->lineEdit_oldBrand->setText(brand);
@@ -42,7 +42,6 @@ void editCar_D::on_buttonBox_accepted(){
     QString carModel = (ui->lineEdit_newModel->text().toUpper());
     uint year = (ui->spinBox_newYear->value());
 
-    shiftDatabase db;
-    db.cars_updateByRegNr(&regNr, &carBrand, &carModel, &year);
+    dataB.cars_updateByRegNr(&regNr, &carBrand, &carModel, &year);
     QMessageBox::information(this, "Success", "Car edited successfully!");
 }

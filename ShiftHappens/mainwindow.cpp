@@ -61,8 +61,7 @@ void MainWindow::on_removeCarB_clicked()
 
         QString RegNr = tableModel->record(selectedRow.row()).value("RegNr").toString();
 
-        shiftDatabase db;
-        if (db.cars_removeByRegNr(&RegNr)) {
+        if (dataB.cars_removeByRegNr(&RegNr)) {
             QMessageBox::information(this, "Success", "Car removed!");
             tableModel->select();
         } else {
@@ -103,8 +102,7 @@ void MainWindow::on_removeCustB_clicked()
                                                   QMessageBox::Yes | QMessageBox::No)) {
         QSqlTableModel *tableModel = qobject_cast<QSqlTableModel*>(ui->tableView_customers->model());
         uint customerId = tableModel->record(selectedRow.row()).value("id").toUInt();
-        shiftDatabase db;
-        if (db.customer_removeByID(&customerId)) {
+        if (dataB.customer_removeByID(&customerId)) {
             QMessageBox::information(this, "Success", "Customer removed!");
             tableModel->select();
         } else {
@@ -114,11 +112,6 @@ void MainWindow::on_removeCustB_clicked()
     viewCustomers();
 }
 
-
-void MainWindow::on_newAssignB_clicked()
-{
-
-}
 
 void MainWindow::viewCustomers(){
     QSqlTableModel *customerTable = new QSqlTableModel(this);

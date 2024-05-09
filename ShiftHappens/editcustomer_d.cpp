@@ -19,6 +19,7 @@ editCustomer_D::~editCustomer_D()
 {
     delete ui;
 }
+
 void editCustomer_D::validateCustomer(){
     bool validated =
         !ui->lineEdit_newName->text().isEmpty() &&
@@ -26,12 +27,12 @@ void editCustomer_D::validateCustomer(){
         !ui->lineEdit_newCity->text().isEmpty();
     ui->buttonBox->button(QDialogButtonBox::Ok)->setEnabled(validated);
 }
+
 void editCustomer_D::fetchCustomer(uint& id){
-    shiftDatabase db;
     QString name, street, city;
     uint pCode;
 
-    (db.customer_fetchById(id, name, street, pCode, city));
+    (dataB.customer_fetchById(id, name, street, pCode, city));
         ui->lineEdit_oldId->setText(QString::number(id));
         ui->lineEdit_newId->setText(QString::number(id));
         ui->lineEdit_oldName->setText(name);
@@ -39,6 +40,7 @@ void editCustomer_D::fetchCustomer(uint& id){
         ui->lineEdit_oldPCode->setText(QString::number(pCode));
         ui->lineEdit_oldCity->setText(city);
 }
+
 void editCustomer_D::on_buttonBox_accepted(){
     uint id = ui->lineEdit_newId->text().toUInt();
     QString name = (ui->lineEdit_newName->text()).toUpper();
@@ -46,7 +48,6 @@ void editCustomer_D::on_buttonBox_accepted(){
     uint pCode = (ui->spinBox_newPCode->value());
     QString city = (ui->lineEdit_newCity->text().toUpper());
 
-    shiftDatabase db;
-    db.customer_updateByID(&id, &name, &street, &pCode, &city);
+    dataB.customer_updateByID(&id, &name, &street, &pCode, &city);
     QMessageBox::information(this, "Success", "Customer edited successfully");
 }

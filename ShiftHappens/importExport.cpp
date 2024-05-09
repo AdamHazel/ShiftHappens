@@ -8,10 +8,13 @@
 #include <QMessageBox>
 #include <fstream>
 
+
+
 int exportCustomers()
 {
     uint customerExportCount { 0 };
     shiftDatabase db;
+
     if (db.customer_countEntries() == 0)
     {
         QMessageBox noFileMsg;

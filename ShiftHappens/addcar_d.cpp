@@ -18,6 +18,7 @@ addCar_D::~addCar_D()
 {
     delete ui;
 }
+
 void addCar_D::validateCar(){
     bool validated =
         !ui->lineEdit_regNr->text().isEmpty() &&
@@ -32,7 +33,6 @@ void addCar_D::on_buttonBox_accepted(){
     QString carModel = (ui->lineEdit_carModel->text().toUpper());
     uint year = (ui->spinBox_year->value());
 
-    shiftDatabase db;
-    db.cars_add(&regNr, &carBrand, &carModel, &year);
+    dataB.cars_add(&regNr, &carBrand, &carModel, &year);
     QMessageBox::information(this, "Success", "Car with Reg.Nr: " + regNr + " added successfully");
 }

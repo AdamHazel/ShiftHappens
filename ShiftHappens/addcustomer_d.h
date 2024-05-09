@@ -19,6 +19,9 @@ public:
     explicit addCustomer_D(QWidget *parent = nullptr);
     ~addCustomer_D();
 
+protected:
+    shiftDatabase dataB;
+
 private slots:
     void on_buttonBox_accepted();
     void validateCustomer();
