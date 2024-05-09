@@ -10,8 +10,6 @@ shiftDatabase::shiftDatabase()
     db = QSqlDatabase::addDatabase("QSQLITE");
     qDebug() << QDir::currentPath();
     db.setDatabaseName(QDir::currentPath() + "/shiftDatabase.db");
-    customer_createTable();
-    cars_createTable();
 }
 
 // Creation of tables

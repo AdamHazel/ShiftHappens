@@ -14,7 +14,8 @@ MainWindow::MainWindow(QWidget *parent)
     , ui(new Ui::MainWindow)
 {
     ui->setupUi(this);
-
+    dataB.cars_createTable();
+    dataB.customer_createTable();
     viewCars();
     viewCustomers();
 
