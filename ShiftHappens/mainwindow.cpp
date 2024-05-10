@@ -130,6 +130,7 @@ void MainWindow::viewCars(){
     carsTable->select();
 
     ui->tableView_cars->setModel(carsTable);
+    ui->tableView_cars->setColumnHidden(4, true);
     ui->tableView_cars->setSelectionMode(QAbstractItemView::SingleSelection);
     ui->tableView_cars->setSelectionBehavior(QAbstractItemView::SelectRows);
     ui->tableView_cars->resizeColumnsToContents();

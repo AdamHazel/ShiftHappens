@@ -73,6 +73,9 @@
     </item>
     <item row="3" column="1">
      <widget class="QLineEdit" name="lineEdit_oldStreet">
+      <property name="focusPolicy">
+       <enum>Qt::NoFocus</enum>
+      </property>
       <property name="echoMode">
        <enum>QLineEdit::Normal</enum>
       </property>
@@ -103,6 +106,9 @@
     </item>
     <item row="4" column="1">
      <widget class="QLineEdit" name="lineEdit_oldPCode">
+      <property name="focusPolicy">
+       <enum>Qt::NoFocus</enum>
+      </property>
       <property name="echoMode">
        <enum>QLineEdit::Normal</enum>
       </property>
@@ -115,6 +121,9 @@
      <widget class="QLineEdit" name="lineEdit_oldName">
       <property name="enabled">
        <bool>true</bool>
+      </property>
+      <property name="focusPolicy">
+       <enum>Qt::NoFocus</enum>
       </property>
       <property name="echoMode">
        <enum>QLineEdit::Normal</enum>
@@ -150,6 +159,9 @@
     </item>
     <item row="5" column="1">
      <widget class="QLineEdit" name="lineEdit_oldCity">
+      <property name="focusPolicy">
+       <enum>Qt::NoFocus</enum>
+      </property>
       <property name="echoMode">
        <enum>QLineEdit::Normal</enum>
       </property>
@@ -167,6 +179,9 @@
     </item>
     <item row="1" column="1">
      <widget class="QLineEdit" name="lineEdit_oldId">
+      <property name="focusPolicy">
+       <enum>Qt::NoFocus</enum>
+      </property>
       <property name="readOnly">
        <bool>true</bool>
       </property>
@@ -174,6 +189,9 @@
     </item>
     <item row="1" column="2">
      <widget class="QLineEdit" name="lineEdit_newId">
+      <property name="focusPolicy">
+       <enum>Qt::NoFocus</enum>
+      </property>
       <property name="readOnly">
        <bool>true</bool>
       </property>
@@ -201,6 +219,12 @@
    </layout>
   </widget>
  </widget>
+ <tabstops>
+  <tabstop>lineEdit_newName</tabstop>
+  <tabstop>lineEdit_newStreet</tabstop>
+  <tabstop>spinBox_newPCode</tabstop>
+  <tabstop>lineEdit_newCity</tabstop>
+ </tabstops>
  <resources/>
  <connections>
   <connection>
