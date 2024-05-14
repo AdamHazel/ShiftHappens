@@ -5,6 +5,7 @@
 #include "editcar_d.h"
 #include "editcustomer_d.h"
 #include "importExport.h"
+#include "assignment_d.h"
 
 #include <QPushButton>
 #include <fstream>
@@ -111,7 +112,17 @@ void MainWindow::on_removeCustB_clicked()
     }
     viewCustomers();
 }
+void MainWindow::on_newAssignB_clicked()
+{
+    assignment_D dialog(this);
+    dialog.exec();
+}
 
+
+void MainWindow::on_remAssignB_clicked()
+{
+
+}
 
 void MainWindow::viewCustomers(){
     QSqlTableModel *customerTable = new QSqlTableModel(this);
@@ -269,4 +280,3 @@ void MainWindow::on_actionExport_all_triggered()
                                                                                            "Number of cars exported: " + QString::number(results.second));
     confirmMsg.exec();
 }
-

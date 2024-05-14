@@ -39,6 +39,8 @@ private slots:
     void on_addCustB_clicked();
     void on_editCustB_clicked();
     void on_removeCustB_clicked();
+    void on_newAssignB_clicked();
+    void on_remAssignB_clicked();
     void on_actionExit_triggered();
     void on_actionImport_customers_triggered();
     void on_actionImport_cars_triggered();

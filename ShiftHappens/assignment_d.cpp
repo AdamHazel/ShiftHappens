@@ -1,15 +1,17 @@
 #include "assignment_d.h"
 #include "ui_assignment_d.h"
 
-assignment::assignment(QWidget *parent)
+assignment_D::assignment_D(QWidget *parent)
     : QDialog(parent)
-    , ui(new Ui::assignment)
+    , ui(new Ui::assignment_D)
 {
     ui->setupUi(this);
 }
 
-assignment::~assignment()
+assignment_D::~assignment_D()
 {
     delete ui;
 }
-void assignment::newAssignment(){}
+void assignment_D::newAssignment(){
+
+}

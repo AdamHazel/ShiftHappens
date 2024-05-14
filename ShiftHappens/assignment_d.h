@@ -8,19 +8,19 @@
 #include <QPushButton>
 
 namespace Ui {
-class assignment;
+class assignment_D;
 }
 
-class assignment : public QDialog
+class assignment_D : public QDialog
 {
     Q_OBJECT
 
 public:
-    explicit assignment(QWidget *parent = nullptr);
-    ~assignment();
+    explicit assignment_D(QWidget *parent = nullptr);
+    ~assignment_D();
 
 private:
-    Ui::assignment *ui;
+    Ui::assignment_D *ui;
 private slots:
     void newAssignment();
 };
