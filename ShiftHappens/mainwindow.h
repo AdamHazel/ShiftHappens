@@ -23,6 +23,9 @@ public:
     ~MainWindow();
     void viewCustomers();
     void viewCars();
+    void viewAssignedCar();
+    void viewAssignCustomer();
+    void viewRentals();
 
 protected:
     shiftDatabase dataB;
@@ -36,18 +39,12 @@ private slots:
     void on_addCustB_clicked();
     void on_editCustB_clicked();
     void on_removeCustB_clicked();
-
     void on_actionExit_triggered();
     void on_actionImport_customers_triggered();
-
     void on_actionImport_cars_triggered();
-
     void on_actionCreate_templates_triggered();
-
     void on_actionExport_customers_triggered();
-
     void on_actionExport_cars_triggered();
-
     void on_actionExport_all_triggered();
 
 private:

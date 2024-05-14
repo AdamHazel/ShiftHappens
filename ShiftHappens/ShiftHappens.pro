@@ -11,6 +11,7 @@ CONFIG += c++17
 SOURCES += \
     addcar_d.cpp \
     addcustomer_d.cpp \
+    assignment_d.cpp \
     editcar_d.cpp \
     editcustomer_d.cpp \
     helperfunctions.cpp \
@@ -22,6 +23,7 @@ SOURCES += \
 HEADERS += \
     addcar_d.h \
     addcustomer_d.h \
+    assignment_d.h \
     car.h \
     customer.h \
     editcar_d.h \
@@ -34,6 +36,7 @@ HEADERS += \
 FORMS += \
     addcar_d.ui \
     addcustomer_d.ui \
+    assignment_d.ui \
     editcar_d.ui \
     editcustomer_d.ui \
     mainwindow.ui

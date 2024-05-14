@@ -136,11 +136,44 @@ void MainWindow::viewCars(){
     ui->tableView_cars->resizeColumnsToContents();
     ui->tableView_cars->show();
 }
+void MainWindow::viewRentals(){
+    QSqlTableModel *rentalsTable = new QSqlTableModel(this);
+    rentalsTable->setTable("cars");
+    rentalsTable->select();
+
+    ui->tableView_rentals->setModel(rentalsTable);
+    ui->tableView_cars->setSelectionMode(QAbstractItemView::SingleSelection);
+    ui->tableView_cars->setSelectionBehavior(QAbstractItemView::SelectRows);
+    ui->tableView_cars->resizeColumnsToContents();
+    ui->tableView_cars->show();
+}
+void MainWindow::viewAssignedCar(){
+    QSqlTableModel *assignCarsTable = new QSqlTableModel(this);
+    assignCarsTable->setTable("cars");
+    assignCarsTable->select();
+
+    ui->tableView_rentals->setModel(assignCarsTable);
+    ui->tableView_cars->setSelectionMode(QAbstractItemView::SingleSelection);
+    ui->tableView_cars->setSelectionBehavior(QAbstractItemView::SelectRows);
+    ui->tableView_cars->resizeColumnsToContents();
+    ui->tableView_cars->show();
+}
+void MainWindow::viewAssignCustomer(){
+    QSqlTableModel *assignCustomerTable = new QSqlTableModel(this);
+    assignCustomerTable->setTable("customers");
+    assignCustomerTable->select();
+
+    ui->tableView_rentals->setModel(assignCustomerTable);
+    ui->tableView_cars->setSelectionMode(QAbstractItemView::SingleSelection);
+    ui->tableView_cars->setSelectionBehavior(QAbstractItemView::SelectRows);
+    ui->tableView_cars->resizeColumnsToContents();
+    ui->tableView_cars->show();
+}
 
 void MainWindow::on_actionExit_triggered()
 {
     if
-        (QMessageBox::Yes == QMessageBox::question(this, "Confirmation", "Are you sure you want to close the program?", QMessageBox::Yes | QMessageBox::No))
+        (QMessageBox::Yes == QMessageBox::question(this, "Confirmation", "Are you sure you want to exit the program?", QMessageBox::Yes | QMessageBox::No))
         std::exit(0);
     else
         return;
