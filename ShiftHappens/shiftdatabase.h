@@ -26,8 +26,8 @@ public:
     bool cars_findByRegNr(QString *regChoice);
 
     // Counters
-    int customer_countEntries();
-    int cars_countEntries();
+    uint customer_countEntries();
+    uint cars_countEntries();
 
     // Fetchers
     std::vector<customer> customer_fetchAll();

@@ -140,7 +140,7 @@ bool shiftDatabase::cars_findByRegNr(QString *regChoice)
 
 
 // Counters
-int shiftDatabase::customer_countEntries()
+uint shiftDatabase::customer_countEntries()
 {
     int count {};
     db.open();
@@ -165,7 +165,7 @@ int shiftDatabase::customer_countEntries()
 }
 
 
-int shiftDatabase::cars_countEntries()
+uint shiftDatabase::cars_countEntries()
 {
     int count {};
     db.open();

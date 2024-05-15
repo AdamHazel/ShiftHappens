@@ -1,3 +1,7 @@
+/**
+ * @class
+ * /
+
 #ifndef ASSIGNMENT_D_H
 #define ASSIGNMENT_D_H
 
@@ -18,6 +22,9 @@ class assignment_D : public QDialog
 public:
     explicit assignment_D(QWidget *parent = nullptr);
     ~assignment_D();
+
+protected:
+    shiftDatabase dataB;
 
 private:
     Ui::assignment_D *ui;

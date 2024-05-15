@@ -4,11 +4,9 @@
 #include "addcustomer_d.h"
 #include "editcar_d.h"
 #include "editcustomer_d.h"
-#include "importExport.h"
 #include "assignment_d.h"
 
 #include <QPushButton>
-#include <fstream>
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
@@ -19,9 +17,7 @@ MainWindow::MainWindow(QWidget *parent)
     dataB.customer_createTable();
     viewCars();
     viewCustomers();
-
-    // Connectors:
-    // connect(ui->addCarB, &QPushButton::clicked, this, &MainWindow::on_addCarB_clicked);
+    viewRentals();
 }
 
 MainWindow::~MainWindow()
@@ -125,8 +121,13 @@ void MainWindow::on_remAssignB_clicked()
 }
 
 void MainWindow::viewCustomers(){
-    QSqlTableModel *customerTable = new QSqlTableModel(this);
+    QSqlTableModel *customerTable = new QSqlTableModel;
     customerTable->setTable("customers");
+    customerTable->setHeaderData(0, Qt::Horizontal, tr("Customer ID"));
+    customerTable->setHeaderData(1, Qt::Horizontal, tr("Name"));
+    customerTable->setHeaderData(2, Qt::Horizontal, tr("Street"));
+    customerTable->setHeaderData(3, Qt::Horizontal, tr("Postcode"));
+    customerTable->setHeaderData(4, Qt::Horizontal, tr("City"));
     customerTable->select();
 
     ui->tableView_customers->setModel(customerTable);
@@ -136,7 +137,7 @@ void MainWindow::viewCustomers(){
     ui->tableView_customers->show();
 }
 void MainWindow::viewCars(){
-    QSqlTableModel *carsTable = new QSqlTableModel(this);
+    QSqlTableModel *carsTable = new QSqlTableModel;
     carsTable->setTable("cars");
     carsTable->select();
 
@@ -148,16 +149,23 @@ void MainWindow::viewCars(){
     ui->tableView_cars->show();
 }
 void MainWindow::viewRentals(){
-    QSqlTableModel *rentalsTable = new QSqlTableModel(this);
+    QSqlTableModel *rentalsTable = new QSqlTableModel;
     rentalsTable->setTable("cars");
+    rentalsTable->setFilter("custID = NULL");
     rentalsTable->select();
+    rentalsTable->setHeaderData(0, Qt::Horizontal, tr("Reg. Num"));
+    rentalsTable->setHeaderData(4, Qt::Horizontal, tr("Assigned to"));
 
     ui->tableView_rentals->setModel(rentalsTable);
-    ui->tableView_cars->setSelectionMode(QAbstractItemView::SingleSelection);
-    ui->tableView_cars->setSelectionBehavior(QAbstractItemView::SelectRows);
-    ui->tableView_cars->resizeColumnsToContents();
-    ui->tableView_cars->show();
+    ui->tableView_rentals->setColumnHidden(1, true);
+    ui->tableView_rentals->setColumnHidden(2, true);
+    ui->tableView_rentals->setColumnHidden(3, true);
+    ui->tableView_rentals->setSelectionMode(QAbstractItemView::SingleSelection);
+    ui->tableView_rentals->setSelectionBehavior(QAbstractItemView::SelectRows);
+    ui->tableView_rentals->resizeColumnsToContents();
+    ui->tableView_rentals->show();
 }
+
 void MainWindow::viewAssignedCar(){
     QSqlTableModel *assignCarsTable = new QSqlTableModel(this);
     assignCarsTable->setTable("cars");
@@ -193,90 +201,37 @@ void MainWindow::on_actionExit_triggered()
 
 void MainWindow::on_actionImport_customers_triggered()
 {
-    importCustomers();
+    importManager.importCustomers(dataB);
     viewCustomers();
 }
 
 
 void MainWindow::on_actionImport_cars_triggered()
 {
-    importCars();
+    importManager.importCars(dataB);
     viewCars();
 }
 
 
 void MainWindow::on_actionCreate_templates_triggered()
 {
-    // Customers template
-    QString customersdesktopPath = QString("%1/customers_import.csv")
-                                       .arg(QStandardPaths::writableLocation(QStandardPaths::DesktopLocation));
-    QByteArray custDP = customersdesktopPath.toLocal8Bit();
-    const char* custPath = custDP.data();
-
-    std::ofstream customers;
-    customers.open(custPath);
-    customers << "name,street,postcode,city\n";
-    customers.close();
-
-    // Cars template
-    QString carsdesktopPath = QString("%1/cars_import.csv")
-                                  .arg(QStandardPaths::writableLocation(QStandardPaths::DesktopLocation));
-    QByteArray carsDP = carsdesktopPath.toLocal8Bit();
-    const char* carsPath = carsDP.data();
-
-    std::ofstream cars;
-    cars.open(carsPath);
-    cars << "RegNr,brand,model,year,custId\n";
-    cars.close();
-
-    QMessageBox confirmMsg;
-    confirmMsg.setWindowTitle("Templates created");
-    confirmMsg.setText("Templates saved to desktop.");
-    confirmMsg.setDetailedText("Templates can be used to import cars and customers.\n"
-                               "File type is .csv. Use commas (,) to separate values.\n"
-                               "To import files, save files to desktop.\n"
-                               "Each entry should have a new row.\n"
-                               "Incase non-number values with \"\" .\n");
-    confirmMsg.exec();
+    importManager.create_templates();
 }
 
 
 void MainWindow::on_actionExport_customers_triggered()
 {
-    auto count = exportCustomers();
-
-    if (count > 0 )
-    {
-        QMessageBox confirmMsg;
-        confirmMsg.setWindowTitle("Export confirmation");
-        confirmMsg.setText("Number of customers exported: " + QString::number(count));
-        confirmMsg.exec();
-    }
+    exportManager.exportCustomers(dataB);
 }
 
 
 void MainWindow::on_actionExport_cars_triggered()
 {
-    auto count = exportCars();
-
-    if (count > 0 )
-    {
-        QMessageBox confirmMsg;
-        confirmMsg.setWindowTitle("Export confirmation");
-        confirmMsg.setText("Number of customers exported: " + QString::number(count));
-        confirmMsg.exec();
-    }
+    exportManager.exportCars(dataB);
 }
 
 
 void MainWindow::on_actionExport_all_triggered()
 {
-    auto results = exportAll();
-
-    QMessageBox confirmMsg;
-    confirmMsg.setWindowTitle("Export confirmation");
-
-    confirmMsg.setText("Number of customers exported: " + QString::number(results.first) + "\n"
-                                                                                           "Number of cars exported: " + QString::number(results.second));
-    confirmMsg.exec();
+    exportManager.exportAll(dataB);
 }
