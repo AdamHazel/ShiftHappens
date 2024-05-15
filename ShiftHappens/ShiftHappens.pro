@@ -14,9 +14,8 @@ SOURCES += \
     assignment_d.cpp \
     editcar_d.cpp \
     editcustomer_d.cpp \
-    exporter.cpp \
     helperfunctions.cpp \
-    importer.cpp \
+    importexporter.cpp \
     main.cpp \
     mainwindow.cpp \
     shiftdatabase.cpp
@@ -29,9 +28,8 @@ HEADERS += \
     customer.h \
     editcar_d.h \
     editcustomer_d.h \
-    exporter.h \
     helperfunctions.h \
-    importer.h \
+    importexporter.h \
     mainwindow.h \
     shiftdatabase.h
 

@@ -1,7 +1,3 @@
-/**
- * @class
- * /
-
 #ifndef ASSIGNMENT_D_H
 #define ASSIGNMENT_D_H
 

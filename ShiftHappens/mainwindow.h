@@ -6,8 +6,7 @@
 #include <QMessageBox>
 #include <QAction>
 
-#include "importer.h"
-#include "exporter.h"
+#include "importexporter.h"
 #include "shiftdatabase.h"
 
 QT_BEGIN_NAMESPACE
@@ -31,8 +30,7 @@ public:
 
 protected:
     shiftDatabase dataB;
-    importer importManager;
-    exporter exportManager;
+    importExporter impexpManager;
     static const uint regNrColumn = 0;
     static const uint IdColumn = 0;
 

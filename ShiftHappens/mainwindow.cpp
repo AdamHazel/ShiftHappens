@@ -139,6 +139,10 @@ void MainWindow::viewCustomers(){
 void MainWindow::viewCars(){
     QSqlTableModel *carsTable = new QSqlTableModel;
     carsTable->setTable("cars");
+    carsTable->setHeaderData(0, Qt::Horizontal, tr("Car Reg.Nr"));
+    carsTable->setHeaderData(1, Qt::Horizontal, tr("Brand"));
+    carsTable->setHeaderData(2, Qt::Horizontal, tr("Model"));
+    carsTable->setHeaderData(3, Qt::Horizontal, tr("Year"));
     carsTable->select();
 
     ui->tableView_cars->setModel(carsTable);
@@ -201,37 +205,37 @@ void MainWindow::on_actionExit_triggered()
 
 void MainWindow::on_actionImport_customers_triggered()
 {
-    importManager.importCustomers(dataB);
+    impexpManager.importCustomers(dataB);
     viewCustomers();
 }
 
 
 void MainWindow::on_actionImport_cars_triggered()
 {
-    importManager.importCars(dataB);
+    impexpManager.importCars(dataB);
     viewCars();
 }
 
 
 void MainWindow::on_actionCreate_templates_triggered()
 {
-    importManager.create_templates();
+    impexpManager.create_templates();
 }
 
 
 void MainWindow::on_actionExport_customers_triggered()
 {
-    exportManager.exportCustomers(dataB);
+    impexpManager.exportCustomers(dataB);
 }
 
 
 void MainWindow::on_actionExport_cars_triggered()
 {
-    exportManager.exportCars(dataB);
+    impexpManager.exportCars(dataB);
 }
 
 
 void MainWindow::on_actionExport_all_triggered()
 {
-    exportManager.exportAll(dataB);
+    impexpManager.exportAll(dataB);
 }
