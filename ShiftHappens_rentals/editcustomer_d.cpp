@@ -1,5 +1,6 @@
 #include "editcustomer_d.h"
 #include "ui_editcustomer_d.h"
+#include "customer.h"
 
 editCustomer_D::editCustomer_D(uint& id, QWidget *parent)
     : QDialog(parent)
@@ -36,16 +37,15 @@ void editCustomer_D::validateCustomer(){
  * @param uint&      reference to customer id that will be fetched
  */
 void editCustomer_D::fetchCustomer(uint& id){
-    QString name, street, city;
-    uint pCode;
 
-    (dataB.customer_fetchById(id, name, street, pCode, city));
+    customer temp = dataB.customer_fetchCustomer(id);
+
     ui->lineEdit_oldId->setText(QString::number(id));
     ui->lineEdit_newId->setText(QString::number(id));
-    ui->lineEdit_oldName->setText(name);
-    ui->lineEdit_oldStreet->setText(street);
-    ui->lineEdit_oldPCode->setText(QString::number(pCode));
-    ui->lineEdit_oldCity->setText(city);
+    ui->lineEdit_oldName->setText(temp.name);
+    ui->lineEdit_oldStreet->setText(temp.street);
+    ui->lineEdit_oldPCode->setText(QString::number(temp.postcode));
+    ui->lineEdit_oldCity->setText(temp.city);
 }
 
 void editCustomer_D::on_buttonBox_accepted()

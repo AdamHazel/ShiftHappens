@@ -1,5 +1,8 @@
 #include "addrental_d.h"
 #include "ui_addrental_d.h"
+#include "rental.h"
+
+#include <vector>
 
 addrental_d::addrental_d(QWidget *parent)
     : QDialog(parent)
@@ -8,6 +11,8 @@ addrental_d::addrental_d(QWidget *parent)
     ui->setupUi(this);
     viewCustomers_rental();
     viewCars_rental();
+
+    ui->buttonBox->button(QDialogButtonBox::Ok)->setEnabled(false);
 }
 
 addrental_d::~addrental_d()
@@ -56,6 +61,7 @@ void addrental_d::on_pushButton_customerSearch_clicked()
 
 void addrental_d::on_pushButton_carSearch_clicked()
 {
+    dataB.databaseOpen();
     QString searchText = ui->lineEdit_carSearch->text().toUpper();
     QString RegNr = "RegNr LIKE '%" + searchText + "%'";
     QString brand = "brand LIKE '%" + searchText + "%'";
@@ -64,43 +70,49 @@ void addrental_d::on_pushButton_carSearch_clicked()
 
     carsTable->setFilter(Filter);
     carsTable->select();
+    dataB.databaseClose();
 }
 
 
 void addrental_d::on_pushButton_reset_clicked()
 {
+    dataB.databaseOpen();
     ui->lineEdit_customerSearch->clear();
     ui->lineEdit_carSearch->clear();
     customerTable->setFilter("");
     carsTable->setFilter("");
     customerTable->select();
     carsTable->select();
+
+    ui->tableView_assignCustomer->setSelectionMode(QAbstractItemView::SingleSelection);
+    ui->tableView_assignCar->setSelectionMode(QAbstractItemView::SingleSelection);
+    ui->tableView_assignCustomer->show();
+    ui->tableView_assignCar->show();
+
+    dataB.databaseClose();
 }
 
 
 void addrental_d::on_buttonBox_accepted()
 {
-    QModelIndex carIndex = ui->tableView_assignCustomer->currentIndex();
-    QModelIndex custIndex = ui->tableView_assignCar->currentIndex();
+    QModelIndex carIndex = ui->tableView_assignCar->currentIndex();
+    QModelIndex custIndex = ui->tableView_assignCustomer->currentIndex();
 
-    //bool rental_addRental(QString* RegNr, uint* custId, QString* startDate, QString* endDate, uint* totalPrice);
     QString RegNr = carsTable->data(carsTable->index(carIndex.row(), 0)).toString();
-    qDebug() << "RegNr is " << RegNr;
     uint custId = customerTable->data(customerTable->index(custIndex.row(), 0)).toUInt();
-    qDebug() << "RegNr is " << RegNr;
+
     QDate start = ui->dateEdit_start->date();
     QDate end = ui->dateEdit_end->date();
-    QString startDate = start.toString();
-    qDebug() << "startDate is " << startDate;
-    QString endDate = end.toString();
-    qDebug() << "endDate is " << endDate;
+    QString startDate = start.toString("dd-MM-yyyy");
+    QString endDate = end.toString("dd-MM-yyyy");
+
     uint dayCount { 1 };
     while (start != end)
     {
         start = start.addDays(1);
         ++dayCount;
     }
-    uint dayPrice = carsTable->data(carsTable->index(carIndex.row(), 3)).toUInt();
+    uint dayPrice = carsTable->record(carIndex.row()).value("dayPrice").toUInt();
     uint totalPrice = dayCount * dayPrice;
     qDebug() << "totalprice is " << totalPrice;
 
@@ -117,5 +129,103 @@ void addrental_d::on_buttonBox_accepted()
         confirmation.setText("Error adding rental");
     }
     confirmation.exec();
+
+}
+
+
+void addrental_d::on_pushButton_checkRental_clicked()
+{
+    QModelIndex selectCust = ui->tableView_assignCustomer->currentIndex();
+    QModelIndex selectCar = ui->tableView_assignCar->currentIndex();
+
+    if (selectCust.row() == -1 || selectCar.row() == -1)
+    {
+        QMessageBox::information(this, "Selections needed", "Please select both customer and car.");
+        return;
+    }
+
+    QSqlTableModel *table = qobject_cast<QSqlTableModel*>(ui->tableView_assignCar->model());
+
+    QString regN = table->record(selectCar.row()).value("RegNr").toString();
+    QDate start = ui->dateEdit_start->date();
+    QDate end = ui->dateEdit_end->date();
+
+    if (start < end)
+    {
+        bool safetoAdd = true;
+        auto rentalCount = dataB.rental_countRecords();
+
+        if (rentalCount > 0)
+        {
+            std::vector<rental> rentals = dataB.rental_FetchAll();
+            for (const auto rent : rentals)
+            {
+                if (regN == rent.RegNr)
+                {
+                    if ( (start <= rent.startDate) && (end >= rent.startDate) && (end <= rent.endDate) )
+                    {
+                        safetoAdd = false;
+                        break;
+                    }
+
+                    if ( (start >= rent.startDate) && (start <= rent.endDate) && (start >= rent.endDate))
+                    {
+                        safetoAdd = false;
+                        break;
+                    }
+
+                    if ( (start >= rent.startDate) && (end <= rent.endDate))
+                    {
+                        safetoAdd = false;
+                        break;
+                    }
+
+                    if ( (start <= rent.startDate) && (end >= rent.endDate))
+                    {
+                        safetoAdd = false;
+                        break;
+                    }
+                }
+            }
+        }
+
+        if (safetoAdd == true)
+        {
+            QMessageBox confirmation;
+            confirmation.setWindowTitle("Checking rental");
+            confirmation.setText("Car is available to assign to customer. Press ok to complete assignment");
+            confirmation.exec();
+            uint dayPrice = table->record(selectCar.row()).value("dayPrice").toUInt();
+            uint dayCount { 1 };
+            while (start != end)
+            {
+                start = start.addDays(1);
+                ++dayCount;
+            }
+            uint totalPrice = dayPrice * dayCount;
+            ui->spinBox_totalPrice->setValue(totalPrice);
+            ui->buttonBox->button(QDialogButtonBox::Ok)->setEnabled(true);
+            ui->pushButton_reset->setEnabled(false);
+            return;
+        }
+        else
+        {
+            QMessageBox resultMessage;
+            resultMessage.setWindowTitle("Checking rental");
+            resultMessage.setText("Car is already assigned at this time");
+            resultMessage.exec();
+            return;
+        }
+    }
+    else
+    {
+        QMessageBox resultMessage;
+        resultMessage.setWindowTitle("Checking rental");
+        resultMessage.setText("End date is before start date");
+        resultMessage.exec();
+        return;
+    }
+
+
 }
 

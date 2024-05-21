@@ -13,7 +13,7 @@ public:
     QDate startDate;
     QDate endDate;
     uint totalPrice;
-    bool completed;
+    int completed;
 };
 
 #endif // RENTAL_H

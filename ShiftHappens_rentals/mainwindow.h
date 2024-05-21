@@ -5,6 +5,7 @@
 #ifndef MAINWINDOW_H
 #define MAINWINDOW_H
 #include "shiftdatabase.h"
+#include "importexporter.h"
 
 #include <QMainWindow>
 #include <QTableView>
@@ -23,6 +24,7 @@ class MainWindow : public QMainWindow
 
 protected:
     shiftDatabase dataB;
+    importExporter impExpManager;
     static const uint regNrColumn = 0;
     static const uint IdColumn = 0;
 
@@ -51,7 +53,19 @@ private slots:
 
     void on_removeRentalB_clicked();
 
-    void on_pushButton_clicked();
+    void on_actionCreate_templates_triggered();
+
+    void on_actionExport_cars_triggered();
+
+    void on_actionExport_customers_triggered();
+
+    void on_actionExport_rentals_triggered();
+
+    void on_actionExport_all_triggered();
+
+    void on_pushButton_rentalCompleted_clicked();
+
+    void on_actionE_xit_triggered();
 
 private:
     Ui::MainWindow *ui;

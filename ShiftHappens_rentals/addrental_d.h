@@ -3,6 +3,7 @@
 
 #include "mainwindow.h"
 #include "shiftdatabase.h"
+#include "rentalmanager.h"
 
 #include <QDialog>
 #include <QPushButton>
@@ -25,6 +26,8 @@ protected:
     shiftDatabase dataB;
     QSqlTableModel *customerTable = new QSqlTableModel(this);
     QSqlTableModel *carsTable = new QSqlTableModel(this);
+    rentalManager manager;
+
 
 
 private slots:
@@ -35,6 +38,8 @@ private slots:
     void on_pushButton_reset_clicked();
 
     void on_buttonBox_accepted();
+
+    void on_pushButton_checkRental_clicked();
 
 private:
     Ui::addrental_d *ui;

@@ -199,15 +199,15 @@
     <rect>
      <x>20</x>
      <y>400</y>
-     <width>86</width>
+     <width>111</width>
      <height>29</height>
     </rect>
    </property>
    <property name="text">
-    <string>Reset</string>
+    <string>Reset search</string>
    </property>
   </widget>
-  <widget class="QSpinBox" name="spinBox">
+  <widget class="QSpinBox" name="spinBox_totalPrice">
    <property name="geometry">
     <rect>
      <x>410</x>
@@ -224,6 +224,9 @@
    </property>
    <property name="suffix">
     <string> ,-</string>
+   </property>
+   <property name="maximum">
+    <number>9999999</number>
    </property>
   </widget>
   <widget class="QLabel" name="label_4">

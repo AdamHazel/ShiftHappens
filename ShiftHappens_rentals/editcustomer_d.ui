@@ -219,6 +219,12 @@
    </layout>
   </widget>
  </widget>
+ <tabstops>
+  <tabstop>lineEdit_newName</tabstop>
+  <tabstop>lineEdit_newStreet</tabstop>
+  <tabstop>spinBox_newPCode</tabstop>
+  <tabstop>lineEdit_newCity</tabstop>
+ </tabstops>
  <resources/>
  <connections>
   <connection>

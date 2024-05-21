@@ -14,6 +14,7 @@ SOURCES += \
     addrental_d.cpp \
     editcar_d.cpp \
     editcustomer_d.cpp \
+    importexporter.cpp \
     main.cpp \
     mainwindow.cpp \
     rental.cpp \
@@ -25,8 +26,11 @@ HEADERS += \
     addcar_d.h \
     addcustomer_d.h \
     addrental_d.h \
+    car.h \
+    customer.h \
     editcar_d.h \
     editcustomer_d.h \
+    importexporter.h \
     mainwindow.h \
     rental.h \
     rentalmanager.h \

@@ -5,6 +5,7 @@
 #include "addcustomer_d.h"
 #include "editcustomer_d.h"
 #include "addrental_d.h"
+#include "customer.h"
 
 #include <QPushButton>
 #include <fstream>
@@ -30,6 +31,7 @@ MainWindow::~MainWindow()
  */
 void MainWindow::viewCustomers()
 {
+    dataB.databaseOpen();
     QSqlTableModel *customerTable = new QSqlTableModel(this);
     customerTable->setTable("customers");
     customerTable->setHeaderData(0, Qt::Horizontal, "Customer Id");
@@ -44,12 +46,14 @@ void MainWindow::viewCustomers()
     ui->tableView_customers->setSelectionBehavior(QAbstractItemView::SelectRows);
     ui->tableView_customers->resizeColumnsToContents();
     ui->tableView_customers->show();
+    dataB.databaseClose();
 }
 
 /**
  * @brief Displays cars from database in tableview on main window
  */
 void MainWindow::viewCars(){
+    dataB.databaseOpen();
     QSqlTableModel *carsTable = new QSqlTableModel(this);
     carsTable->setTable("cars");
     carsTable->setHeaderData(0, Qt::Horizontal, "Car Reg.Nr");
@@ -63,12 +67,14 @@ void MainWindow::viewCars(){
     ui->tableView_cars->setSelectionBehavior(QAbstractItemView::SelectRows);
     ui->tableView_cars->resizeColumnsToContents();
     ui->tableView_cars->show();
+    dataB.databaseClose();
 }
 
 /**
  * @brief Displays rentals from database in tableview on main window
  */
 void MainWindow::viewRentals(){
+    dataB.databaseOpen();
     QSqlTableModel *rentalsTable = new QSqlTableModel(this);
     rentalsTable->setTable("rentals");
     rentalsTable->setHeaderData(0, Qt::Horizontal, "Rental Id");
@@ -85,6 +91,7 @@ void MainWindow::viewRentals(){
     ui->tableView_rentals->setSelectionBehavior(QAbstractItemView::SelectRows);
     ui->tableView_rentals->resizeColumnsToContents();
     ui->tableView_rentals->show();
+    dataB.databaseClose();
 }
 
 /**
@@ -117,6 +124,7 @@ void MainWindow::on_editCarB_clicked()
     editCar_D dialog(regNr, this);
     dialog.exec();
     viewCars();
+    viewRentals();
 }
 
 
@@ -127,13 +135,17 @@ void MainWindow::on_removeCarB_clicked()
         QMessageBox::information(this, "Selection Needed", "Please select a car to remove.");
         return;
     }
-    if (QMessageBox::Yes == QMessageBox::question(this, "Confirm Delete", "Are you sure you want to delete this car?",
+    if (QMessageBox::Yes == QMessageBox::question(this, "Confirm Delete", "Are you sure you want to delete this car?"
+                                                                          " Uncompleted rentals using this car will"
+                                                                          " also be deleted.",
                                                   QMessageBox::Yes | QMessageBox::No)) {
         QSqlTableModel *tableModel = qobject_cast<QSqlTableModel*>(ui->tableView_cars->model());
 
         QString RegNr = tableModel->record(selectedRow.row()).value("RegNr").toString();
 
-        if (dataB.cars_removeByRegNr(&RegNr)) {
+        if (dataB.cars_removeByRegNr(&RegNr))
+        {
+            dataB.rental_removeRentalonCar(RegNr);
             QMessageBox::information(this, "Success", "Car removed!");
             tableModel->select();
         } else {
@@ -141,6 +153,7 @@ void MainWindow::on_removeCarB_clicked()
         }
     }
     viewCars();
+    viewRentals();
 }
 
 
@@ -173,11 +186,15 @@ void MainWindow::on_removeCustB_clicked()
         QMessageBox::information(this, "Selection Needed", "Please select a customer to remove.");
         return;
     }
-    if (QMessageBox::Yes == QMessageBox::question(this, "Confirm Delete", "Are you sure you want to delete this customer?",
+    if (QMessageBox::Yes == QMessageBox::question(this, "Confirm Delete", "Are you sure you want to delete this customer?"
+                                                                          " Uncompleted rentals assigned to this customer"
+                                                                          " will also be deleted.",
                                                   QMessageBox::Yes | QMessageBox::No)) {
         QSqlTableModel *tableModel = qobject_cast<QSqlTableModel*>(ui->tableView_customers->model());
         uint customerId = tableModel->record(selectedRow.row()).value("id").toUInt();
-        if (dataB.customer_removeByID(&customerId)) {
+        if (dataB.customer_removeByID(&customerId))
+        {
+            dataB.rental_removeRentalonCustomer(customerId);
             QMessageBox::information(this, "Success", "Customer removed!");
             tableModel->select();
         } else {
@@ -185,6 +202,7 @@ void MainWindow::on_removeCustB_clicked()
         }
     }
     viewCustomers();
+    viewRentals();
 }
 
 
@@ -207,8 +225,10 @@ void MainWindow::on_removeRentalB_clicked()
                                                   QMessageBox::Yes | QMessageBox::No)) {
         QSqlTableModel *tableModel = qobject_cast<QSqlTableModel*>(ui->tableView_rentals->model());
         uint rentalId = tableModel->record(selectedRow.row()).value("id").toUInt();
+        uint custId = tableModel->record(selectedRow.row()).value("custId").toUInt();
+
         if (dataB.rental_removeRental(rentalId)) {
-            QMessageBox::information(this, "Success", "Rental removed!");
+            QMessageBox::information(this, "Success", "Rental is removed.");
             tableModel->select();
         } else {
             QMessageBox::critical(this, "Error", "Failed to remove rental.");
@@ -217,27 +237,92 @@ void MainWindow::on_removeRentalB_clicked()
     viewRentals();
 }
 
-// WORK HERE
-void MainWindow::on_pushButton_clicked()
+
+
+void MainWindow::on_actionCreate_templates_triggered()
 {
-    /*
+    impExpManager.create_templates();
+}
+
+
+void MainWindow::on_actionExport_cars_triggered()
+{
+    impExpManager.exportCars(dataB);
+}
+
+
+void MainWindow::on_actionExport_customers_triggered()
+{
+    impExpManager.exportCustomers(dataB);
+}
+
+
+void MainWindow::on_actionExport_rentals_triggered()
+{
+    impExpManager.exportRentals(dataB);
+}
+
+
+void MainWindow::on_actionExport_all_triggered()
+{
+    impExpManager.exportAll(dataB);
+}
+
+
+void MainWindow::on_pushButton_rentalCompleted_clicked()
+{
     QModelIndex selectedRow = ui->tableView_rentals->currentIndex();
     if (selectedRow.row() == -1) {
-        QMessageBox::information(this, "Selection Needed", "Please select a rental to update.");
+        QMessageBox::information(this, "Selection Needed", "Please select a rental to set as completed.");
         return;
     }
-    if (QMessageBox::Yes == QMessageBox::question(this, "Confirm Update", "Are you sure you want to update this rental?",
-                                                  QMessageBox::Yes | QMessageBox::No)) {
-        QSqlTableModel *tableModel = qobject_cast<QSqlTableModel*>(ui->tableView_rentals->model());
-        uint rentalId = tableModel->record(selectedRow.row()).value("id").toUInt();
-        if (dataB.rental_completeRental(rentalId)) {
-            QMessageBox::information(this, "Success", "Rental updated!");
-            tableModel->select();
-        } else {
 
+    QSqlTableModel *tableModel = qobject_cast<QSqlTableModel*>(ui->tableView_rentals->model());
+    int confirm = tableModel->record(selectedRow.row()).value("completed").toInt();
+    if(confirm == 0)
+    {
+        QString eDate = tableModel->record(selectedRow.row()).value("endDate").toString();
+        QDate endDate = QDate::fromString(eDate, "dd-MM-yyyy");
+        QDate current = QDate::currentDate();
+
+        if (endDate < current)
+        {
+            if (QMessageBox::Yes == QMessageBox::question(this, "Confirm completion", "Are you sure you want to complete this rental? A completed"
+                                                                                      " rental cannot be reversed.",
+                                                          QMessageBox::Yes | QMessageBox::No)) {
+                uint rentalId = tableModel->record(selectedRow.row()).value("id").toUInt();
+                if (dataB.rental_completeRental(rentalId)) {
+                    QMessageBox::information(this, "Success", "Rental completed!");
+                    tableModel->select();
+                } else {
+                    QMessageBox::critical(this, "Error", "Failed to complete rental.");
+                }
+            }
+        }
+        else
+        {
+            QMessageBox errorMessage;
+            errorMessage.setWindowTitle("Error");
+            errorMessage.setText("Cannot complete rental as rental is not over");
+            errorMessage.exec();
         }
     }
+    else
+    {
+        QMessageBox errorMessage;
+        errorMessage.setWindowTitle("Error");
+        errorMessage.setText("Rental is already completed");
+        errorMessage.exec();
+    }
     viewRentals();
-*/
+}
+
+
+void MainWindow::on_actionE_xit_triggered()
+{
+    if (QMessageBox::Yes == QMessageBox::question(this, "Exiting", "Are you sure you want to exit the program?", QMessageBox::Yes | QMessageBox::No))
+        std::exit(0);
+    else
+        return;
 }
 

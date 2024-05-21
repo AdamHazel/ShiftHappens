@@ -1,5 +1,6 @@
 #include "editcar_d.h"
 #include "ui_editcar_d.h"
+#include "car.h"
 
 editCar_D::editCar_D(QString& regNr, QWidget *parent)
     : QDialog(parent)
@@ -33,15 +34,13 @@ void editCar_D::validateCar(){
  * @param QString&      reference to regNr that will be fetched
  */
 void editCar_D::fetchCar(QString& regNr){
-    QString brand, model;
-    uint dayPrice;
+    car temp = dataB.cars_fetchCar(regNr);
 
-    (dataB.cars_fetchById(regNr, brand, model, dayPrice));
-        ui->lineEdit_oldRegNr->setText(regNr);
-        ui->lineEdit_newRegNr->setText(regNr);
-        ui->lineEdit_oldBrand->setText(brand);
-        ui->lineEdit_oldModel->setText(model);
-        ui->lineEdit_oldDayPrice->setText(QString::number(dayPrice));
+    ui->lineEdit_oldRegNr->setText(regNr);
+    ui->lineEdit_newRegNr->setText(regNr);
+    ui->lineEdit_oldBrand->setText(temp.brand);
+    ui->lineEdit_oldModel->setText(temp.model);
+    ui->lineEdit_oldDayPrice->setText(QString::number(temp.dayPrice));
 }
 
 /**

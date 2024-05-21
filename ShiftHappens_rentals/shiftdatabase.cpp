@@ -11,7 +11,6 @@ shiftDatabase::shiftDatabase()
     db.setDatabaseName(QDir::currentPath() + "/shiftDatabase.db");
 }
 
-
 // Functions that manage car table
 /**
  * @brief Creates car table in database
@@ -82,7 +81,7 @@ bool shiftDatabase::cars_add(QString *RegNr, QString *brand, QString *model, uin
 */
 void shiftDatabase::cars_fetchById(QString& regNr, QString& brand, QString& model, uint& dayPrice){
     db.open();
-    QSqlQuery query;
+    QSqlQuery query(db);
     query.prepare("SELECT brand, model, dayPrice FROM cars WHERE RegNr = :RegNr");
     query.bindValue(":RegNr", regNr);
 
@@ -99,6 +98,34 @@ void shiftDatabase::cars_fetchById(QString& regNr, QString& brand, QString& mode
 }
 
 /**
+ * @brief Fetches car corresponding to given regNr
+ * @param QString&     reference to variable holding regNr
+ * @return  car
+ */
+car shiftDatabase::cars_fetchCar(QString& regNr)
+{
+    car temp;
+    db.open();
+    QSqlQuery query(db);
+    query.prepare("SELECT brand, model, dayPrice FROM cars WHERE RegNr = :RegNr");
+    query.bindValue(":RegNr", regNr);
+
+    if (query.exec() && query.next()) {
+        qDebug() << "Car found";
+        temp.RegNr = regNr;
+        temp.brand = query.value(0).toString();
+        temp.model = query.value(1).toString();
+        temp.dayPrice = query.value(2).toUInt();
+        db.close();
+        return temp;
+    }
+    else {
+        qDebug() << "Car not found or query failed: " << db.lastError();
+        db.close();
+    }
+}
+
+/**
  * @brief Updates record of car table in database
  * @param QString*      pointer to variable that holds regNr
  * @param QString*      pointer to variable that holds brand
@@ -111,7 +138,7 @@ bool shiftDatabase::cars_updateByRegNr(QString *RegNr, QString *brand, QString *
     bool confirm = false;
     db.open();
 
-    QSqlQuery query;
+    QSqlQuery query(db);
     query.prepare("UPDATE cars "
                   "SET model = ?, "
                   "brand = ?,"
@@ -149,7 +176,7 @@ bool shiftDatabase::cars_removeByRegNr(QString *RegNr){
     bool executed = false;
     db.open();
 
-    QSqlQuery query;
+    QSqlQuery query(db);
     query.prepare("DELETE FROM cars WHERE RegNr = :RegNr");
     query.bindValue(":RegNr", *RegNr);
     if(query.exec())
@@ -164,6 +191,83 @@ bool shiftDatabase::cars_removeByRegNr(QString *RegNr){
     db.close();
     return executed;
 }
+
+/**
+ * @brief Counts how many records are in cars table
+ * @return Amount of records
+ */
+uint shiftDatabase::cars_countEntries()
+{
+    uint count {};
+    db.open();
+    qDebug() << "Query to start counting how many cars exists";
+    QSqlQuery query(db);
+    query.prepare("SELECT COUNT (*) "
+                  "FROM cars");
+    if (query.exec())
+    {
+        qDebug() << "Query executed";
+        while (query.next())
+            count = query.value(0).toInt();
+
+        if (count == 0)
+            qDebug() << "No cars in table";
+
+        if (count > 0)
+            qDebug() << "Cars in table is " << count;
+    }
+    else
+        qDebug() << "Query to find amount of cars did not work" << db.lastError();
+
+    db.close();
+
+    return count;
+}
+
+std::vector<car> shiftDatabase::cars_fetchAll()
+{
+    std::vector<car> cars;
+    db.open();
+
+    QSqlQuery fetchAll(db);
+    fetchAll.prepare("SELECT * FROM cars");
+    fetchAll.exec();
+    QSqlRecord rec = fetchAll.record();
+
+    qDebug() << "Number of columns: " << rec.count();
+
+    int regIndex = rec.indexOf("RegNr");
+    int brandIndex = rec.indexOf("brand");
+    int modelIndex = rec.indexOf("model");
+    int dayPriceIndex = rec.indexOf("dayPrice");
+
+    while (fetchAll.next())
+    {
+        car temp;
+        temp.RegNr = fetchAll.value(regIndex).toString();
+        temp.brand = fetchAll.value(brandIndex).toString();
+        temp.model = fetchAll.value(modelIndex).toString();
+        temp.dayPrice = fetchAll.value(dayPriceIndex).toInt();
+        cars.push_back(temp);
+    }
+
+    qDebug() << "Finished fetching all rows in customers table";
+    db.close();
+
+    return cars;
+}
+
+
+
+
+
+
+
+
+
+
+
+
 
 // Functions that manage customer table
 /**
@@ -238,7 +342,7 @@ bool shiftDatabase::customer_add(QString *name, QString *street, uint *postNum, 
 void shiftDatabase::customer_fetchById(uint& id, QString& name, QString& street, uint& postNum, QString& city)
 {
     db.open();
-    QSqlQuery query;
+    QSqlQuery query(db);
     query.prepare("SELECT name, street, postcode, city FROM customers WHERE id = :id");
     query.bindValue(":id", id);
 
@@ -256,6 +360,36 @@ void shiftDatabase::customer_fetchById(uint& id, QString& name, QString& street,
 }
 
 /**
+ * @brief Fetches customer corresponding to given id
+ * @param uint&     reference to variable holding customer id
+ * @return  customer
+ */
+customer shiftDatabase::customer_fetchCustomer(uint &id)
+{
+    customer temp;
+    db.open();
+    QSqlQuery query(db);
+    query.prepare("SELECT name, street, postcode, city FROM customers WHERE id = :id");
+    query.bindValue(":id", id);
+
+    if (query.exec() && query.next()) {
+        qDebug() << "Customer found";
+        temp.id = id;
+        temp.name = query.value(0).toString();
+        temp.street = query.value(1).toString();
+        temp.postcode = query.value(2).toUInt();
+        temp.city = query.value(3).toString();
+        db.close();
+        return temp;
+    }
+    else {
+        qDebug() << "Customer not found or query failed: " << db.lastError();
+        db.close();
+    }
+
+}
+
+/**
  * @brief Updates record of customer table in database
  * @param uint*         pointer to variable that holds id
  * @param QString*      pointer to variable that holds name
@@ -269,7 +403,7 @@ bool shiftDatabase::customer_updateByID(uint *idChoice, QString *name, QString *
     bool confirm = false;
     db.open();
 
-    QSqlQuery query;
+    QSqlQuery query(db);
     query.prepare("UPDATE customers "
                   "SET name = ?, "
                   "street = ?,"
@@ -301,7 +435,7 @@ bool shiftDatabase::customer_updateByID(uint *idChoice, QString *name, QString *
 }
 
 /**
- * @brief Deletes record of customer table in database
+ * @brief Deletes record in customer table in database
  * @param QString*      pointer to variable that holds customer ID
  * @returns confirmation if query was successful
 */
@@ -309,7 +443,7 @@ bool shiftDatabase::customer_removeByID(uint *idChoice){
     bool executed = false;
     db.open();
 
-    QSqlQuery query;
+    QSqlQuery query(db);
 
     query.prepare("DELETE FROM customers WHERE id = :id");
     query.bindValue(":id", *idChoice);
@@ -329,6 +463,90 @@ bool shiftDatabase::customer_removeByID(uint *idChoice){
 
     return executed;
 }
+
+/**
+ * @brief Counts how many records are in customers table
+ * @return Amount of records
+ */
+uint shiftDatabase::customer_countEntries()
+{
+    uint count {};
+    db.open();
+    qDebug() << "Query to start counting how many customers exists";
+    QSqlQuery query(db);
+    query.prepare("SELECT COUNT (*) "
+                  "FROM customers");
+    if (query.exec())
+    {
+        qDebug() << "Query executed";
+        while (query.next())
+            count = query.value(0).toInt();
+
+        if (count == 0)
+            qDebug() << "No Customers in table";
+
+        if (count > 0)
+            qDebug() << "Customers in table is " << count;
+    }
+    else
+        qDebug() << "Query to find amount of customers did not work" << db.lastError();
+
+    db.close();
+
+    return count;
+}
+
+std::vector<customer> shiftDatabase::customer_fetchAll()
+{
+    std::vector<customer> customers;
+    db.open();
+
+    QSqlQuery fetchAll(db);
+    fetchAll.prepare("SELECT * FROM customers");
+    fetchAll.exec();
+    QSqlRecord rec = fetchAll.record();
+
+    qDebug() << "Number of columns: " << rec.count();
+
+    int idIndex = rec.indexOf("id");
+    int nameIndex = rec.indexOf("name");
+    int streetIndex = rec.indexOf("street");
+    int postcIndex = rec.indexOf("postcode");
+    int cityIndex = rec.indexOf("city");
+
+    while (fetchAll.next())
+    {
+        customer temp;
+        temp.id = fetchAll.value(idIndex).toInt();
+        temp.name = fetchAll.value(nameIndex).toString();
+        temp.street = fetchAll.value(streetIndex).toString();
+        temp.postcode = fetchAll.value(postcIndex).toInt();
+        temp.city = fetchAll.value(cityIndex).toString();
+        customers.push_back(temp);
+    }
+
+    qDebug() << "Finished fetching all rows in customers table";
+
+    db.close();
+
+    return customers;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 // Functions that manage rentals table
 /**
@@ -408,7 +626,7 @@ int shiftDatabase::rental_countRecords()
     int count {};
     db.open();
     qDebug() << "Query to start counting how many cars exists";
-    QSqlQuery query;
+    QSqlQuery query(db);
     query.prepare("SELECT COUNT (*) "
                   "FROM rentals");
     if (query.exec())
@@ -440,6 +658,7 @@ int shiftDatabase::rental_countRecords()
 */
 std::vector<rental> shiftDatabase::rental_FetchAll()
 {
+    db.open();
     std::vector<rental> rentals;
     QSqlQuery fetchAll(db);
     fetchAll.prepare("SELECT * FROM rentals");
@@ -460,10 +679,16 @@ std::vector<rental> shiftDatabase::rental_FetchAll()
         temp.rentalId = fetchAll.value(idIndex).toInt();
         temp.RegNr = fetchAll.value(regnrIndex).toString();
         temp.custId = fetchAll.value(custidIndex).toInt();
-        temp.startDate = fetchAll.value(sdateIndex).toDate();
-        temp.endDate = fetchAll.value(edateIndex).toDate();
+
+        QString sDate = fetchAll.value(sdateIndex).toString();
+        qDebug() << "Start date from fetch all function" << sDate;
+        temp.startDate = QDate::fromString(sDate, "dd-MM-yyyy");
+
+        QString eDate = fetchAll.value(edateIndex).toString();
+        temp.endDate = QDate::fromString(eDate, "dd-MM-yyyy");
+
         temp.totalPrice = fetchAll.value(totalpriceIndex).toInt();
-        temp.completed = fetchAll.value(completedIndex).toBool();
+        temp.completed = fetchAll.value(completedIndex).toInt();
         rentals.push_back(temp);
     }
 
@@ -474,12 +699,17 @@ std::vector<rental> shiftDatabase::rental_FetchAll()
     return rentals;
 }
 
+/**
+ * @brief Deletes record in rental table in database
+ * @param uint&         reference to variable that holds rental ID
+ * @returns confirmation if query was successful
+*/
 bool shiftDatabase::rental_removeRental(uint &id)
 {
     bool executed = false;
     db.open();
 
-    QSqlQuery query;
+    QSqlQuery query(db);
 
     query.prepare("DELETE FROM rentals WHERE id = ?");
     query.addBindValue(id);
@@ -499,12 +729,69 @@ bool shiftDatabase::rental_removeRental(uint &id)
     return executed;
 }
 
+/**
+ * @brief Deletes uncompleted rentals in rental table in database based on customer Id
+ * @param uint&         reference to variable that holds rental ID
+ * @returns confirmation if query was successful
+*/
+bool shiftDatabase::rental_removeRentalonCustomer(uint &custId)
+{
+    bool executed = false;
+    db.open();
+
+    QSqlQuery query(db);
+
+    query.prepare("DELETE FROM rentals WHERE custId = ? AND completed = 0");
+    query.addBindValue(custId);
+    if(query.exec())
+    {
+       executed = true;
+    }
+    else
+        qDebug() << "Query not executed" << db.lastError();
+
+    db.close();
+
+    return executed;
+}
+
+/**
+ * @brief Deletes uncompleted rentals in rental table in database based on regNr
+ * @param uint&         reference to variable that holds rental ID
+ * @returns confirmation if query was successful
+*/
+bool shiftDatabase::rental_removeRentalonCar(QString& RegNr)
+{
+    bool executed = false;
+    db.open();
+
+    QSqlQuery query(db);
+
+    query.prepare("DELETE FROM rentals WHERE RegNr LIKE ? AND completed = 0");
+    query.addBindValue(RegNr);
+    if(query.exec())
+    {
+        executed = true;
+    }
+    else
+        qDebug() << "Query not executed" << db.lastError();
+
+    db.close();
+
+    return executed;
+}
+
+/**
+ * @brief Updates record in rental table to completed state
+ * @param uint&         reference to variable that holds rental ID
+ * @returns confirmation if query was successful
+*/
 bool shiftDatabase::rental_completeRental(uint &id)
 {
     bool executed = false;
     db.open();
 
-    QSqlQuery query;
+    QSqlQuery query(db);
 
     query.prepare("UPDATE rentals SET completed = 1 WHERE id = ?");
     query.addBindValue(id);
@@ -522,4 +809,21 @@ bool shiftDatabase::rental_completeRental(uint &id)
     db.close();
 
     return executed;
+}
+
+// Extra
+/**
+ * @brief Opens database connection
+ */
+void shiftDatabase::databaseOpen()
+{
+    db.open();
+}
+
+/**
+ * @brief Closes database connection
+ */
+void shiftDatabase::databaseClose()
+{
+    db.close();
 }
