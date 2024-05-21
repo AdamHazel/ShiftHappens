@@ -1,0 +1,278 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>addrental_d</class>
+ <widget class="QDialog" name="addrental_d">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>604</width>
+    <height>517</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>Add rental</string>
+  </property>
+  <widget class="QDialogButtonBox" name="buttonBox">
+   <property name="geometry">
+    <rect>
+     <x>240</x>
+     <y>470</y>
+     <width>341</width>
+     <height>32</height>
+    </rect>
+   </property>
+   <property name="orientation">
+    <enum>Qt::Horizontal</enum>
+   </property>
+   <property name="standardButtons">
+    <set>QDialogButtonBox::Cancel|QDialogButtonBox::Ok</set>
+   </property>
+  </widget>
+  <widget class="QLabel" name="label">
+   <property name="geometry">
+    <rect>
+     <x>20</x>
+     <y>0</y>
+     <width>211</width>
+     <height>51</height>
+    </rect>
+   </property>
+   <property name="font">
+    <font>
+     <pointsize>12</pointsize>
+    </font>
+   </property>
+   <property name="text">
+    <string>Enter rental details:</string>
+   </property>
+  </widget>
+  <widget class="QGroupBox" name="groupBox">
+   <property name="geometry">
+    <rect>
+     <x>20</x>
+     <y>40</y>
+     <width>561</width>
+     <height>111</height>
+    </rect>
+   </property>
+   <property name="title">
+    <string>Start and End dates</string>
+   </property>
+   <widget class="QWidget" name="formLayoutWidget">
+    <property name="geometry">
+     <rect>
+      <x>10</x>
+      <y>30</y>
+      <width>541</width>
+      <height>71</height>
+     </rect>
+    </property>
+    <layout class="QFormLayout" name="formLayout">
+     <item row="0" column="0">
+      <widget class="QLabel" name="label_2">
+       <property name="text">
+        <string>Start date:</string>
+       </property>
+      </widget>
+     </item>
+     <item row="0" column="1">
+      <widget class="QDateEdit" name="dateEdit_start">
+       <property name="minimumDate">
+        <date>
+         <year>2024</year>
+         <month>1</month>
+         <day>1</day>
+        </date>
+       </property>
+       <property name="displayFormat">
+        <string>dd-MM-yyyy</string>
+       </property>
+       <property name="calendarPopup">
+        <bool>true</bool>
+       </property>
+      </widget>
+     </item>
+     <item row="1" column="0">
+      <widget class="QLabel" name="label_3">
+       <property name="text">
+        <string>End date:</string>
+       </property>
+      </widget>
+     </item>
+     <item row="1" column="1">
+      <widget class="QDateEdit" name="dateEdit_end">
+       <property name="minimumDate">
+        <date>
+         <year>2024</year>
+         <month>1</month>
+         <day>1</day>
+        </date>
+       </property>
+       <property name="currentSection">
+        <enum>QDateTimeEdit::DaySection</enum>
+       </property>
+       <property name="displayFormat">
+        <string>dd-MM-yyyy</string>
+       </property>
+       <property name="calendarPopup">
+        <bool>true</bool>
+       </property>
+       <property name="date">
+        <date>
+         <year>2024</year>
+         <month>1</month>
+         <day>2</day>
+        </date>
+       </property>
+      </widget>
+     </item>
+    </layout>
+   </widget>
+  </widget>
+  <widget class="QGroupBox" name="groupBox_customerCar">
+   <property name="geometry">
+    <rect>
+     <x>20</x>
+     <y>160</y>
+     <width>561</width>
+     <height>231</height>
+    </rect>
+   </property>
+   <property name="title">
+    <string>Customer and car</string>
+   </property>
+   <widget class="QWidget" name="gridLayoutWidget">
+    <property name="geometry">
+     <rect>
+      <x>9</x>
+      <y>29</y>
+      <width>541</width>
+      <height>191</height>
+     </rect>
+    </property>
+    <layout class="QGridLayout" name="gridLayout">
+     <item row="0" column="1">
+      <widget class="QPushButton" name="pushButton_customerSearch">
+       <property name="text">
+        <string>Search</string>
+       </property>
+      </widget>
+     </item>
+     <item row="0" column="2">
+      <widget class="QLineEdit" name="lineEdit_carSearch"/>
+     </item>
+     <item row="0" column="3">
+      <widget class="QPushButton" name="pushButton_carSearch">
+       <property name="text">
+        <string>Search</string>
+       </property>
+      </widget>
+     </item>
+     <item row="0" column="0">
+      <widget class="QLineEdit" name="lineEdit_customerSearch"/>
+     </item>
+     <item row="1" column="0" colspan="2">
+      <widget class="QTableView" name="tableView_assignCustomer"/>
+     </item>
+     <item row="1" column="2" colspan="2">
+      <widget class="QTableView" name="tableView_assignCar"/>
+     </item>
+    </layout>
+   </widget>
+  </widget>
+  <widget class="QPushButton" name="pushButton_checkRental">
+   <property name="geometry">
+    <rect>
+     <x>20</x>
+     <y>440</y>
+     <width>171</width>
+     <height>29</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>Check rental</string>
+   </property>
+  </widget>
+  <widget class="QPushButton" name="pushButton_reset">
+   <property name="geometry">
+    <rect>
+     <x>20</x>
+     <y>400</y>
+     <width>86</width>
+     <height>29</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>Reset</string>
+   </property>
+  </widget>
+  <widget class="QSpinBox" name="spinBox">
+   <property name="geometry">
+    <rect>
+     <x>410</x>
+     <y>420</y>
+     <width>161</width>
+     <height>29</height>
+    </rect>
+   </property>
+   <property name="readOnly">
+    <bool>true</bool>
+   </property>
+   <property name="buttonSymbols">
+    <enum>QAbstractSpinBox::NoButtons</enum>
+   </property>
+   <property name="suffix">
+    <string> ,-</string>
+   </property>
+  </widget>
+  <widget class="QLabel" name="label_4">
+   <property name="geometry">
+    <rect>
+     <x>410</x>
+     <y>400</y>
+     <width>131</width>
+     <height>20</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>Total Price (kr)</string>
+   </property>
+  </widget>
+ </widget>
+ <resources/>
+ <connections>
+  <connection>
+   <sender>buttonBox</sender>
+   <signal>accepted()</signal>
+   <receiver>addrental_d</receiver>
+   <slot>accept()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>248</x>
+     <y>254</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>157</x>
+     <y>274</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>buttonBox</sender>
+   <signal>rejected()</signal>
+   <receiver>addrental_d</receiver>
+   <slot>reject()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>316</x>
+     <y>260</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>286</x>
+     <y>274</y>
+    </hint>
+   </hints>
+  </connection>
+ </connections>
+</ui>

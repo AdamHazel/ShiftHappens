@@ -438,7 +438,7 @@ void importExporter::exportCars(shiftDatabase &dataB)
 
         std::ofstream carsFile;
         carsFile.open(carsPath);
-        carsFile << "id,name,street,postcode,city\n";
+        carsFile << "RegNr,brand,model,year,custId\n";
 
         for (auto &car : allCars)
         {

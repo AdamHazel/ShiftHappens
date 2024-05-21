@@ -155,7 +155,7 @@ void MainWindow::viewCars(){
 void MainWindow::viewRentals(){
     QSqlTableModel *rentalsTable = new QSqlTableModel;
     rentalsTable->setTable("cars");
-    rentalsTable->setFilter("custID = NULL");
+    rentalsTable->setFilter("custID IS NOT NULL");
     rentalsTable->select();
     rentalsTable->setHeaderData(0, Qt::Horizontal, tr("Reg. Num"));
     rentalsTable->setHeaderData(4, Qt::Horizontal, tr("Assigned to"));

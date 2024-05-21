@@ -1,0 +1,264 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>MainWindow</class>
+ <widget class="QMainWindow" name="MainWindow">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>1000</width>
+    <height>600</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>ShiftHappens</string>
+  </property>
+  <widget class="QWidget" name="centralwidget">
+   <widget class="QTabWidget" name="cars_tabWidget">
+    <property name="geometry">
+     <rect>
+      <x>0</x>
+      <y>10</y>
+      <width>991</width>
+      <height>541</height>
+     </rect>
+    </property>
+    <property name="currentIndex">
+     <number>2</number>
+    </property>
+    <widget class="QWidget" name="Cars">
+     <attribute name="title">
+      <string>Cars</string>
+     </attribute>
+     <widget class="QTableView" name="tableView_cars">
+      <property name="geometry">
+       <rect>
+        <x>0</x>
+        <y>0</y>
+        <width>781</width>
+        <height>501</height>
+       </rect>
+      </property>
+     </widget>
+     <widget class="QWidget" name="verticalLayoutWidget">
+      <property name="geometry">
+       <rect>
+        <x>780</x>
+        <y>0</y>
+        <width>211</width>
+        <height>501</height>
+       </rect>
+      </property>
+      <layout class="QVBoxLayout" name="cars_verticalLayout">
+       <item>
+        <widget class="QPushButton" name="addCarB">
+         <property name="text">
+          <string>Add new car</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QPushButton" name="editCarB">
+         <property name="text">
+          <string>Edit car</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QPushButton" name="removeCarB">
+         <property name="text">
+          <string>Remove car</string>
+         </property>
+        </widget>
+       </item>
+      </layout>
+     </widget>
+    </widget>
+    <widget class="QWidget" name="customers_tabWidget">
+     <attribute name="title">
+      <string>Customers</string>
+     </attribute>
+     <widget class="QTableView" name="tableView_customers">
+      <property name="geometry">
+       <rect>
+        <x>0</x>
+        <y>0</y>
+        <width>781</width>
+        <height>501</height>
+       </rect>
+      </property>
+     </widget>
+     <widget class="QWidget" name="verticalLayoutWidget_2">
+      <property name="geometry">
+       <rect>
+        <x>780</x>
+        <y>0</y>
+        <width>201</width>
+        <height>501</height>
+       </rect>
+      </property>
+      <layout class="QVBoxLayout" name="verticalLayout_customers">
+       <item>
+        <widget class="QPushButton" name="addCustB">
+         <property name="text">
+          <string>Add new customer</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QPushButton" name="editCustB">
+         <property name="text">
+          <string>Edit customer</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QPushButton" name="removeCustB">
+         <property name="text">
+          <string>Remove customer</string>
+         </property>
+        </widget>
+       </item>
+      </layout>
+     </widget>
+    </widget>
+    <widget class="QWidget" name="rentals_tabWidget">
+     <attribute name="title">
+      <string>Rentals</string>
+     </attribute>
+     <widget class="QTableView" name="tableView_rentals">
+      <property name="geometry">
+       <rect>
+        <x>0</x>
+        <y>0</y>
+        <width>781</width>
+        <height>501</height>
+       </rect>
+      </property>
+     </widget>
+     <widget class="QWidget" name="verticalLayoutWidget_3">
+      <property name="geometry">
+       <rect>
+        <x>780</x>
+        <y>0</y>
+        <width>201</width>
+        <height>501</height>
+       </rect>
+      </property>
+      <layout class="QVBoxLayout" name="verticalLayout_customers_2">
+       <item>
+        <widget class="QPushButton" name="addRentalB">
+         <property name="text">
+          <string>Add rental</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QPushButton" name="removeRentalB">
+         <property name="text">
+          <string>Remove rental</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QPushButton" name="pushButton">
+         <property name="text">
+          <string>Rental completed</string>
+         </property>
+        </widget>
+       </item>
+      </layout>
+     </widget>
+    </widget>
+   </widget>
+  </widget>
+  <widget class="QMenuBar" name="menubar">
+   <property name="geometry">
+    <rect>
+     <x>0</x>
+     <y>0</y>
+     <width>1000</width>
+     <height>25</height>
+    </rect>
+   </property>
+   <widget class="QMenu" name="menuFile">
+    <property name="title">
+     <string>&amp;File</string>
+    </property>
+    <widget class="QMenu" name="menu_Import">
+     <property name="title">
+      <string>&amp;Import</string>
+     </property>
+     <addaction name="actionImport_Cars"/>
+     <addaction name="actionImport_Customers"/>
+     <addaction name="actionImport_Rentals"/>
+     <addaction name="separator"/>
+     <addaction name="actionCreate_templates"/>
+    </widget>
+    <widget class="QMenu" name="menu_Export">
+     <property name="title">
+      <string>&amp;Export</string>
+     </property>
+     <addaction name="actionExport_cars"/>
+     <addaction name="actionExport_customers"/>
+     <addaction name="actionExport_rentals"/>
+     <addaction name="separator"/>
+     <addaction name="actionExport_all"/>
+    </widget>
+    <addaction name="menu_Import"/>
+    <addaction name="menu_Export"/>
+    <addaction name="separator"/>
+    <addaction name="actionE_xit"/>
+   </widget>
+   <addaction name="menuFile"/>
+  </widget>
+  <widget class="QStatusBar" name="statusbar"/>
+  <action name="actionImport_Cars">
+   <property name="text">
+    <string>Import &amp;Cars</string>
+   </property>
+  </action>
+  <action name="actionImport_Customers">
+   <property name="text">
+    <string>Import C&amp;ustomers</string>
+   </property>
+  </action>
+  <action name="actionImport_Rentals">
+   <property name="text">
+    <string>Import &amp;Rentals</string>
+   </property>
+  </action>
+  <action name="actionCreate_templates">
+   <property name="text">
+    <string>Create &amp;templates</string>
+   </property>
+  </action>
+  <action name="actionExport_cars">
+   <property name="text">
+    <string>Export cars</string>
+   </property>
+  </action>
+  <action name="actionExport_customers">
+   <property name="text">
+    <string>Export customers</string>
+   </property>
+  </action>
+  <action name="actionExport_rentals">
+   <property name="text">
+    <string>Export rentals</string>
+   </property>
+  </action>
+  <action name="actionExport_all">
+   <property name="text">
+    <string>Export &amp;all</string>
+   </property>
+  </action>
+  <action name="actionE_xit">
+   <property name="text">
+    <string>E&amp;xit</string>
+   </property>
+  </action>
+ </widget>
+ <resources/>
+ <connections/>
+</ui>
