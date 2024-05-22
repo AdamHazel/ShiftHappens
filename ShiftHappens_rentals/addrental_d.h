@@ -41,6 +41,8 @@ private slots:
 
     void on_pushButton_checkRental_clicked();
 
+    void on_dateEdit_start_userDateChanged(const QDate &date);
+
 private:
     Ui::addrental_d *ui;
 };

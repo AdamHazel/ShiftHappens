@@ -46,6 +46,7 @@ void addrental_d::viewCustomers_rental(){
 
 void addrental_d::on_pushButton_customerSearch_clicked()
 {
+    dataB.databaseOpen();
     QString searchText = ui->lineEdit_customerSearch->text().toUpper();
     QString name = "name LIKE '%"+ searchText + "%'";
     QString street = "street LIKE '%" + searchText + "%'";
@@ -55,7 +56,7 @@ void addrental_d::on_pushButton_customerSearch_clicked()
 
     customerTable->setFilter(Filter);
     customerTable->select();
-
+    dataB.databaseClose();
 }
 
 
@@ -206,6 +207,8 @@ void addrental_d::on_pushButton_checkRental_clicked()
             ui->spinBox_totalPrice->setValue(totalPrice);
             ui->buttonBox->button(QDialogButtonBox::Ok)->setEnabled(true);
             ui->pushButton_reset->setEnabled(false);
+            ui->dateEdit_start->setReadOnly(true);
+            ui->dateEdit_end->setReadOnly(true);
             return;
         }
         else
@@ -227,5 +230,11 @@ void addrental_d::on_pushButton_checkRental_clicked()
     }
 
 
+}
+
+
+void addrental_d::on_dateEdit_start_userDateChanged(const QDate &date)
+{
+    ui->dateEdit_end->setDate(date);
 }
 
