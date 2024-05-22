@@ -151,7 +151,7 @@ void addrental_d::on_pushButton_checkRental_clicked()
     QDate start = ui->dateEdit_start->date();
     QDate end = ui->dateEdit_end->date();
 
-    if (start < end)
+    if (start <= end)
     {
         bool safetoAdd = true;
         auto rentalCount = dataB.rental_countRecords();
