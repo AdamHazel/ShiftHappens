@@ -1,3 +1,7 @@
+/**
+ * @class A representation of a customer with corresponding values that are saved in database
+ */
+
 #ifndef CUSTOMER_H
 #define CUSTOMER_H
 

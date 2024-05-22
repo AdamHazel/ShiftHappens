@@ -1,3 +1,7 @@
+/**
+ * @class editCustomerr_D (D for dialog) object handles user interaction when user wishes to edit a customer
+ */
+
 #ifndef EDITCUSTOMER_D_H
 #define EDITCUSTOMER_D_H
 

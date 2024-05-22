@@ -10,6 +10,10 @@
 #include <QPushButton>
 #include <fstream>
 
+/**
+ * @brief Constructor
+ * @param parent
+ */
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
     , ui(new Ui::MainWindow)
@@ -17,10 +21,13 @@ MainWindow::MainWindow(QWidget *parent)
     ui->setupUi(this);
     dataB.cars_createTable();
     dataB.customer_createTable();
-    dataB.rentals_createTable();
+    dataB.rental_createTable();
     viewAll();
 }
 
+/**
+ * @brief Deconstructor
+ */
 MainWindow::~MainWindow()
 {
     delete ui;
@@ -104,7 +111,9 @@ void MainWindow::viewAll() {
 }
 
 
-// Slots
+/**
+ * @brief Opens addCar dialog when user clicks appropriate button
+ */
 void MainWindow::on_addCarB_clicked()
 {
     addCar_D dialog(this);
@@ -112,7 +121,9 @@ void MainWindow::on_addCarB_clicked()
     viewCars();
 }
 
-
+/**
+ * @brief Opens editCar dialog when user clicks appropriate button
+ */
 void MainWindow::on_editCarB_clicked()
 {
     QModelIndex selectedRow = ui->tableView_cars->currentIndex();
@@ -127,7 +138,9 @@ void MainWindow::on_editCarB_clicked()
     viewRentals();
 }
 
-
+/**
+ * @brief Triggers removal of car and appropiate rentals based on user choice
+ */
 void MainWindow::on_removeCarB_clicked()
 {
     QModelIndex selectedRow = ui->tableView_cars->currentIndex();
@@ -156,7 +169,9 @@ void MainWindow::on_removeCarB_clicked()
     viewRentals();
 }
 
-
+/**
+ * @brief Opens addCustomer dialog when user clicks appropriate button
+ */
 void MainWindow::on_addCustB_clicked()
 {
     addCustomer_D dialog(this);
@@ -164,7 +179,9 @@ void MainWindow::on_addCustB_clicked()
     viewCustomers();
 }
 
-
+/**
+ * @brief Opens editCustomer dialog when user clicks appropriate button
+ */
 void MainWindow::on_editCustB_clicked()
 {
     QModelIndex selectedRow = ui->tableView_customers->currentIndex();
@@ -178,7 +195,9 @@ void MainWindow::on_editCustB_clicked()
     viewCustomers();
 }
 
-
+/**
+ * @brief Triggers removal of customer and appropiate rentals based on user choice
+ */
 void MainWindow::on_removeCustB_clicked()
 {
     QModelIndex selectedRow = ui->tableView_customers->currentIndex();
@@ -205,7 +224,9 @@ void MainWindow::on_removeCustB_clicked()
     viewRentals();
 }
 
-
+/**
+ * @brief Opens addRental dialog when user clicks appropriate button
+ */
 void MainWindow::on_addRentalB_clicked()
 {
     addrental_d dialog(this);
@@ -213,7 +234,9 @@ void MainWindow::on_addRentalB_clicked()
     viewRentals();
 }
 
-
+/**
+ * @brief Removal of rental based on user choice
+ */
 void MainWindow::on_removeRentalB_clicked()
 {
     QModelIndex selectedRow = ui->tableView_rentals->currentIndex();
@@ -238,37 +261,9 @@ void MainWindow::on_removeRentalB_clicked()
 }
 
 
-
-void MainWindow::on_actionCreate_templates_triggered()
-{
-    impExpManager.create_templates();
-}
-
-
-void MainWindow::on_actionExport_cars_triggered()
-{
-    impExpManager.exportCars(dataB);
-}
-
-
-void MainWindow::on_actionExport_customers_triggered()
-{
-    impExpManager.exportCustomers(dataB);
-}
-
-
-void MainWindow::on_actionExport_rentals_triggered()
-{
-    impExpManager.exportRentals(dataB);
-}
-
-
-void MainWindow::on_actionExport_all_triggered()
-{
-    impExpManager.exportAll(dataB);
-}
-
-
+/**
+ * @brief Completion of rental based on user choice
+ */
 void MainWindow::on_pushButton_rentalCompleted_clicked()
 {
     QModelIndex selectedRow = ui->tableView_rentals->currentIndex();
@@ -317,12 +312,67 @@ void MainWindow::on_pushButton_rentalCompleted_clicked()
     viewRentals();
 }
 
-
+/**
+ * @brief Exits program
+ */
 void MainWindow::on_actionE_xit_triggered()
 {
     if (QMessageBox::Yes == QMessageBox::question(this, "Exiting", "Are you sure you want to exit the program?", QMessageBox::Yes | QMessageBox::No))
         std::exit(0);
     else
         return;
+}
+
+
+void MainWindow::on_actionImport_Cars_triggered()
+{
+    impExpManager.importCars(dataB);
+    viewCars();
+    viewRentals();
+}
+
+
+void MainWindow::on_actionImport_Customers_triggered()
+{
+    impExpManager.importCustomers(dataB);
+    viewCustomers();
+    viewRentals();
+}
+
+
+void MainWindow::on_actionImport_Rentals_triggered()
+{
+    impExpManager.importRentals(dataB);
+    viewRentals();
+}
+
+
+void MainWindow::on_actionCreate_templates_triggered()
+{
+    impExpManager.create_templates();
+}
+
+
+void MainWindow::on_actionExport_cars_triggered()
+{
+    impExpManager.exportCars(dataB);
+}
+
+
+void MainWindow::on_actionExport_customers_triggered()
+{
+    impExpManager.exportCustomers(dataB);
+}
+
+
+void MainWindow::on_actionExport_rentals_triggered()
+{
+    impExpManager.exportRentals(dataB);
+}
+
+
+void MainWindow::on_actionExport_all_triggered()
+{
+    impExpManager.exportAll(dataB);
 }
 

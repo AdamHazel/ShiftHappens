@@ -2,6 +2,10 @@
 #include "ui_editcustomer_d.h"
 #include "customer.h"
 
+/**
+ * @brief Constructor for editCustomer_D
+ * @param QWidget parent
+ */
 editCustomer_D::editCustomer_D(uint& id, QWidget *parent)
     : QDialog(parent)
     , ui(new Ui::editCustomer_D)
@@ -16,6 +20,9 @@ editCustomer_D::editCustomer_D(uint& id, QWidget *parent)
     fetchCustomer(id);
 }
 
+/**
+ * @brief Deconstructor
+ */
 editCustomer_D::~editCustomer_D()
 {
     delete ui;
@@ -48,6 +55,9 @@ void editCustomer_D::fetchCustomer(uint& id){
     ui->lineEdit_oldCity->setText(temp.city);
 }
 
+/**
+ * @brief Updates database based on user input and produces corresponding confirmation message
+ */
 void editCustomer_D::on_buttonBox_accepted()
 {
     uint id = ui->lineEdit_newId->text().toUInt();

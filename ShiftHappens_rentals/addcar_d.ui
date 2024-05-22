@@ -94,7 +94,7 @@
     <item row="3" column="0">
      <widget class="QLabel" name="label_5">
       <property name="text">
-       <string>Day Price</string>
+       <string>Day Price (kr):</string>
       </property>
      </widget>
     </item>
@@ -102,6 +102,9 @@
      <widget class="QSpinBox" name="spinBox_dayPrice">
       <property name="buttonSymbols">
        <enum>QAbstractSpinBox::UpDownArrows</enum>
+      </property>
+      <property name="suffix">
+       <string> ,-</string>
       </property>
       <property name="minimum">
        <number>500</number>

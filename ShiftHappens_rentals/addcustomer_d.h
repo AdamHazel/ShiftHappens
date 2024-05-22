@@ -1,3 +1,7 @@
+/**
+ * @class addCustomer_D (D for dialog) object handles user interaction when user wishes to add a customer
+ */
+
 #ifndef ADDCUSTOMER_D_H
 #define ADDCUSTOMER_D_H
 

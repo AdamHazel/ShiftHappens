@@ -1,9 +1,14 @@
 #include "addrental_d.h"
 #include "ui_addrental_d.h"
 #include "rental.h"
+#include "helper_functions.h"
 
 #include <vector>
 
+/**
+ * @brief Constructor for addRental_d
+ * @param QWidget parent
+ */
 addrental_d::addrental_d(QWidget *parent)
     : QDialog(parent)
     , ui(new Ui::addrental_d)
@@ -15,11 +20,17 @@ addrental_d::addrental_d(QWidget *parent)
     ui->buttonBox->button(QDialogButtonBox::Ok)->setEnabled(false);
 }
 
+/**
+ * @brief Destructor
+ */
 addrental_d::~addrental_d()
 {
     delete ui;
 }
 
+/**
+ * @brief Renders overview of availabe cars to choose from
+ */
 void addrental_d::viewCars_rental(){
     carsTable->setTable("cars");
     carsTable->select();
@@ -32,6 +43,9 @@ void addrental_d::viewCars_rental(){
     ui->tableView_assignCar->show();
 }
 
+/**
+ * @brief Renders overview of availabe customers to choose from
+ */
 void addrental_d::viewCustomers_rental(){
     customerTable->setTable("customers");
     customerTable->select();
@@ -44,6 +58,9 @@ void addrental_d::viewCustomers_rental(){
     ui->tableView_assignCustomer->show();
 }
 
+/**
+ * @brief Filters customer table based on user input
+ */
 void addrental_d::on_pushButton_customerSearch_clicked()
 {
     dataB.databaseOpen();
@@ -51,7 +68,6 @@ void addrental_d::on_pushButton_customerSearch_clicked()
     QString name = "name LIKE '%"+ searchText + "%'";
     QString street = "street LIKE '%" + searchText + "%'";
     QString city = "city LIKE '%" + searchText + "%'";
-    //QString id = "id = " + searchText;
     QString Filter = QString("%1 OR %2 OR %3").arg(name, street, city);
 
     customerTable->setFilter(Filter);
@@ -59,7 +75,9 @@ void addrental_d::on_pushButton_customerSearch_clicked()
     dataB.databaseClose();
 }
 
-
+/**
+ * @brief Filters car table based on user input
+ */
 void addrental_d::on_pushButton_carSearch_clicked()
 {
     dataB.databaseOpen();
@@ -74,7 +92,9 @@ void addrental_d::on_pushButton_carSearch_clicked()
     dataB.databaseClose();
 }
 
-
+/**
+ * @brief Resets customer and car tables
+ */
 void addrental_d::on_pushButton_reset_clicked()
 {
     dataB.databaseOpen();
@@ -93,7 +113,9 @@ void addrental_d::on_pushButton_reset_clicked()
     dataB.databaseClose();
 }
 
-
+/**
+ * @brief Processes user choices and adds rental to database
+ */
 void addrental_d::on_buttonBox_accepted()
 {
     QModelIndex carIndex = ui->tableView_assignCar->currentIndex();
@@ -106,15 +128,9 @@ void addrental_d::on_buttonBox_accepted()
     QDate end = ui->dateEdit_end->date();
     QString startDate = start.toString("dd-MM-yyyy");
     QString endDate = end.toString("dd-MM-yyyy");
-
-    uint dayCount { 1 };
-    while (start != end)
-    {
-        start = start.addDays(1);
-        ++dayCount;
-    }
     uint dayPrice = carsTable->record(carIndex.row()).value("dayPrice").toUInt();
-    uint totalPrice = dayCount * dayPrice;
+
+    uint totalPrice = totalPriceCalculate(start, end, dayPrice);
     qDebug() << "totalprice is " << totalPrice;
 
     bool confirm = dataB.rental_addRental(RegNr, custId, startDate, endDate, totalPrice);
@@ -133,7 +149,9 @@ void addrental_d::on_buttonBox_accepted()
 
 }
 
-
+/**
+ * @brief Checks if user choices give a valid rental. Confirmation message rendered accordingly.
+ */
 void addrental_d::on_pushButton_checkRental_clicked()
 {
     QModelIndex selectCust = ui->tableView_assignCustomer->currentIndex();
@@ -169,7 +187,7 @@ void addrental_d::on_pushButton_checkRental_clicked()
                         break;
                     }
 
-                    if ( (start >= rent.startDate) && (start <= rent.endDate) && (start >= rent.endDate))
+                    if ( (start >= rent.startDate) && (start <= rent.endDate) && (end >= rent.endDate))
                     {
                         safetoAdd = false;
                         break;
@@ -197,13 +215,7 @@ void addrental_d::on_pushButton_checkRental_clicked()
             confirmation.setText("Car is available to assign to customer. Press ok to complete assignment");
             confirmation.exec();
             uint dayPrice = table->record(selectCar.row()).value("dayPrice").toUInt();
-            uint dayCount { 1 };
-            while (start != end)
-            {
-                start = start.addDays(1);
-                ++dayCount;
-            }
-            uint totalPrice = dayPrice * dayCount;
+            uint totalPrice = totalPriceCalculate(start, end, dayPrice);
             ui->spinBox_totalPrice->setValue(totalPrice);
             ui->buttonBox->button(QDialogButtonBox::Ok)->setEnabled(true);
             ui->pushButton_reset->setEnabled(false);
@@ -215,7 +227,7 @@ void addrental_d::on_pushButton_checkRental_clicked()
         {
             QMessageBox resultMessage;
             resultMessage.setWindowTitle("Checking rental");
-            resultMessage.setText("Car is already assigned at this time");
+            resultMessage.setText("Car is already assigned during this period.");
             resultMessage.exec();
             return;
         }
@@ -232,7 +244,9 @@ void addrental_d::on_pushButton_checkRental_clicked()
 
 }
 
-
+/**
+ * @brief Moves end date of rental as start date is chosen so that end date is not before start date
+ */
 void addrental_d::on_dateEdit_start_userDateChanged(const QDate &date)
 {
     ui->dateEdit_end->setDate(date);

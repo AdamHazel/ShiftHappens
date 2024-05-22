@@ -14,11 +14,10 @@ SOURCES += \
     addrental_d.cpp \
     editcar_d.cpp \
     editcustomer_d.cpp \
+    helper_functions.cpp \
     importexporter.cpp \
     main.cpp \
     mainwindow.cpp \
-    rental.cpp \
-    rentalmanager.cpp \
     shiftdatabase.cpp
 
 HEADERS += \
@@ -30,10 +29,10 @@ HEADERS += \
     customer.h \
     editcar_d.h \
     editcustomer_d.h \
+    helper_functions.h \
     importexporter.h \
     mainwindow.h \
     rental.h \
-    rentalmanager.h \
     shiftdatabase.h
 
 FORMS += \

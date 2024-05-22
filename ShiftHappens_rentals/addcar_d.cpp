@@ -1,6 +1,10 @@
 #include "addcar_d.h"
 #include "ui_addcar_d.h"
 
+/**
+ * @brief Constructor for addCar_D
+ * @param QWidget parent
+ */
 addCar_D::addCar_D(QWidget *parent)
     : QDialog(parent)
     , ui(new Ui::addCar_D)
@@ -14,6 +18,9 @@ addCar_D::addCar_D(QWidget *parent)
     ui->buttonBox->button(QDialogButtonBox::Ok)->setEnabled(false);
 }
 
+/**
+ * @brief Deconstructor
+ */
 addCar_D::~addCar_D()
 {
     delete ui;
@@ -31,7 +38,7 @@ void addCar_D::validateCar(){
 }
 
 /**
- * @brief Adds car to the database (with error checks)
+ * @brief Adds car to the database when "ok" is pressed (produces error message if unsuccesful)
  */
 void addCar_D::on_buttonBox_accepted(){
     QString regNr = (ui->lineEdit_regNr->text()).toUpper();
@@ -47,7 +54,7 @@ void addCar_D::on_buttonBox_accepted(){
     {
         QMessageBox errorMessage;
         errorMessage.setWindowTitle("Error");
-        errorMessage.setText("Car with Reg.Nr" + regNr + "not added");
+        errorMessage.setText("Car with Reg.Nr " + regNr + " not added");
         errorMessage.setDetailedText("Check that the car does not already exist");
         errorMessage.exec();
     }

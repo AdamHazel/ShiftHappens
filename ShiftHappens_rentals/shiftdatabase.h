@@ -23,7 +23,7 @@ public:
     // Table creators
     void customer_createTable();
     void cars_createTable();
-    void rentals_createTable();
+    void rental_createTable();
 
     // Car functions
     bool cars_add(QString *RegNr, QString *brand, QString *model, uint *dayPrice);
@@ -33,6 +33,10 @@ public:
     bool cars_removeByRegNr(QString *RegNr);
     uint cars_countEntries();
     std::vector<car> cars_fetchAll();
+    void cars_dropTable();
+    void cars_resetTable();
+    bool cars_checkExistence(QString &RegNr);
+    uint cars_fetchDayPrice(QString &RegNr);
 
     // Customer functions
     bool customer_add(QString *name, QString *street, uint *postNum, QString *city);
@@ -42,6 +46,9 @@ public:
     bool customer_removeByID(uint *idChoice);
     uint customer_countEntries();
     std::vector<customer> customer_fetchAll();
+    void customer_dropTable();
+    void customer_resetTable();
+    bool customer_checkExistence(uint &id);
 
     // Rental functions
     bool rental_addRental(QString& RegNr, uint& custId, QString& startDate, QString& endDate, uint& totalPrice);
@@ -52,6 +59,9 @@ public:
     bool rental_removeRentalonCar(QString& RegNr);
     bool rental_completeRental(uint &id);
     bool rental_uncompleteRental(uint &id);
+    void rental_dropTable();
+    void rental_resetTable();
+
 
     // Extra functions
     void databaseOpen();

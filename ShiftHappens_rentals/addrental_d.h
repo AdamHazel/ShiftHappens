@@ -1,9 +1,12 @@
+/**
+ * @class addRental_D (D for dialog) object handles user interaction when user wishes to add a rental
+ */
+
 #ifndef ADDRENTAL_D_H
 #define ADDRENTAL_D_H
 
 #include "mainwindow.h"
 #include "shiftdatabase.h"
-#include "rentalmanager.h"
 
 #include <QDialog>
 #include <QPushButton>
@@ -26,7 +29,6 @@ protected:
     shiftDatabase dataB;
     QSqlTableModel *customerTable = new QSqlTableModel(this);
     QSqlTableModel *carsTable = new QSqlTableModel(this);
-    rentalManager manager;
 
 
 

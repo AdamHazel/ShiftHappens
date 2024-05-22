@@ -1,3 +1,7 @@
+/**
+ * @class editCar_D (D for dialog) object handles user interaction when user wishes to edit a car
+ */
+
 #ifndef EDITCAR_D_H
 #define EDITCAR_D_H
 

@@ -4,6 +4,9 @@
 #include <vector>
 #include <QMessageBox>
 
+/**
+ * @brief Constructor
+ */
 shiftDatabase::shiftDatabase()
 {
     db = QSqlDatabase::addDatabase("QSQLITE");
@@ -73,7 +76,7 @@ bool shiftDatabase::cars_add(QString *RegNr, QString *brand, QString *model, uin
 }
 
 /**
- * @brief Fetches record from car table in database
+ * @brief Fetches record from car table in database and places information in variables
  * @param QString&      reference to variable that will hold regNr
  * @param QString&      reference to variable that will hold brand
  * @param QString&      reference to variable that will hold model
@@ -117,12 +120,10 @@ car shiftDatabase::cars_fetchCar(QString& regNr)
         temp.model = query.value(1).toString();
         temp.dayPrice = query.value(2).toUInt();
         db.close();
-        return temp;
     }
-    else {
-        qDebug() << "Car not found or query failed: " << db.lastError();
-        db.close();
-    }
+    else
+        qDebug() << "Car not fetched " << db.lastError();
+    return temp;
 }
 
 /**
@@ -224,6 +225,10 @@ uint shiftDatabase::cars_countEntries()
     return count;
 }
 
+/**
+ * @brief Fetches all records from cars table
+ * @return Vector of cars
+ */
 std::vector<car> shiftDatabase::cars_fetchAll()
 {
     std::vector<car> cars;
@@ -257,14 +262,93 @@ std::vector<car> shiftDatabase::cars_fetchAll()
     return cars;
 }
 
+/**
+ * @brief Drops car table from database
+ */
+void shiftDatabase::cars_dropTable()
+{
+    db.open();
 
+    QSqlQuery query(db);
+    query.prepare("DROP TABLE cars");
+    query.exec();
 
+    db.close();
+}
 
+/**
+ * @brief Resets cars table
+ */
+void shiftDatabase::cars_resetTable()
+{
+    cars_dropTable();
+    cars_createTable();
+    rental_resetTable();
+}
 
+/**
+ * @brief Checks if a specific car exists in cars table
+ * @param QString&     reference to variable holding regNr
+ * @return bool corresponding to existence of car
+ */
+bool shiftDatabase::cars_checkExistence(QString &RegNr)
+{
+    bool exists = false;
 
+    db.open();
+    QSqlQuery query(db);
+    query.prepare("SELECT COUNT (*) "
+                  "FROM cars WHERE RegNr = ?");
+    query.addBindValue(RegNr);
 
+    if (query.exec())
+    {
+        int count {};
+        qDebug() << "Query executed";
+        while (query.next())
+            count = query.value(0).toInt();
 
+        if (count == 0)
+            qDebug() << "No cars in table";
 
+        if (count == 1)
+            exists = true;
+    }
+    else
+        qDebug() << "Query to find amount of cars did not work" << db.lastError();
+
+    db.close();
+
+    return exists;
+}
+
+/**
+ * @brief Fetches dayPrice to the desired car
+ * @param QString&     reference to variable holding regNr
+ * @return dayPrice
+ */
+uint shiftDatabase::cars_fetchDayPrice(QString &RegNr)
+{
+    uint dayPrice{ 0 };
+
+    db.open();
+    QSqlQuery query(db);
+    query.prepare("SELECT dayPrice FROM cars WHERE RegNr = ?");
+    query.addBindValue(RegNr);
+
+    if (query.exec())
+    {
+        while(query.next())
+            dayPrice = query.value(0).toUInt();
+    }
+    else
+        qDebug() << "Error getting dayPrice " << db.lastError();
+
+    db.close();
+
+    return dayPrice;
+
+}
 
 
 
@@ -332,7 +416,7 @@ bool shiftDatabase::customer_add(QString *name, QString *street, uint *postNum, 
 }
 
 /**
- * @brief Fetches record from customers table in database
+ * @brief Fetches record from customers table in database and places information in variables
  * @param uint&         reference to variable that will hold id
  * @param QString&      reference to variable that will hold name
  * @param QString&      reference to variable that will hold street
@@ -380,13 +464,12 @@ customer shiftDatabase::customer_fetchCustomer(uint &id)
         temp.postcode = query.value(2).toUInt();
         temp.city = query.value(3).toString();
         db.close();
-        return temp;
     }
     else {
         qDebug() << "Customer not found or query failed: " << db.lastError();
         db.close();
     }
-
+    return temp;
 }
 
 /**
@@ -396,7 +479,7 @@ customer shiftDatabase::customer_fetchCustomer(uint &id)
  * @param QString*      pointer to variable that holds street
  * @param uint*         pointer to variable that holds postcode
  * @param QString*      pointer to variable that holds city
- * @returns bool         shows if query was successful
+ * @returns bool        shows if query was successful
 */
 bool shiftDatabase::customer_updateByID(uint *idChoice, QString *name, QString *street, uint *postNum, QString *city)
 {
@@ -496,6 +579,10 @@ uint shiftDatabase::customer_countEntries()
     return count;
 }
 
+/**
+ * @brief Fetches all records from customers table
+ * @return Vector of customers
+ */
 std::vector<customer> shiftDatabase::customer_fetchAll()
 {
     std::vector<customer> customers;
@@ -532,17 +619,65 @@ std::vector<customer> shiftDatabase::customer_fetchAll()
     return customers;
 }
 
+/**
+ * @brief Drops customers table from database
+ */
+void shiftDatabase::customer_dropTable()
+{
+    db.open();
 
+    QSqlQuery query(db);
+    query.prepare("DROP TABLE customers");
+    query.exec();
 
+    db.close();
+}
 
+/**
+ * @brief Resets customers table
+ */
+void shiftDatabase::customer_resetTable()
+{
+    customer_dropTable();
+    customer_createTable();
+    rental_resetTable();
+}
 
+/**
+ * @brief Checks if a specific customer exists in customer table
+ * @param QString&     reference to variable holding regNr
+ * @return bool corresponding to existence of customer
+ */
+bool shiftDatabase::customer_checkExistence(uint &id)
+{
+    bool exists = false;
 
+    db.open();
+    QSqlQuery query(db);
+    query.prepare("SELECT COUNT (*) "
+                  "FROM customers WHERE id = ?");
+    query.addBindValue(id);
 
+    if (query.exec())
+    {
+        int count {};
+        qDebug() << "Query executed";
+        while (query.next())
+            count = query.value(0).toInt();
 
+        if (count == 0)
+            qDebug() << "No cars in table";
 
+        if (count == 1)
+            exists = true;
+    }
+    else
+        qDebug() << "Query to find amount of cars did not work" << db.lastError();
 
+    db.close();
 
-
+    return exists;
+}
 
 
 
@@ -552,7 +687,7 @@ std::vector<customer> shiftDatabase::customer_fetchAll()
 /**
  * @brief Creates rentals table in database (foreign keys managed by program rather than database)
 */
-void shiftDatabase::rentals_createTable()
+void shiftDatabase::rental_createTable()
 {
     db.open();
     QSqlQuery createCars(db);
@@ -810,6 +945,31 @@ bool shiftDatabase::rental_completeRental(uint &id)
 
     return executed;
 }
+
+/**
+ * @brief Drops rentals table from database
+ */
+void shiftDatabase::rental_dropTable()
+{
+    db.open();
+
+    QSqlQuery query(db);
+    query.prepare("DROP TABLE rentals");
+    query.exec();
+
+    db.close();
+}
+
+/**
+ * @brief Resets rental table
+ */
+void shiftDatabase::rental_resetTable()
+{
+    rental_dropTable();
+    rental_createTable();
+}
+
+
 
 // Extra
 /**

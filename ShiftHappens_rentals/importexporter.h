@@ -1,3 +1,7 @@
+/**
+ * @class importExporter object handles import and exporting functions including error checking
+ */
+
 #ifndef IMPORTEXPORTER_H
 #define IMPORTEXPORTER_H
 

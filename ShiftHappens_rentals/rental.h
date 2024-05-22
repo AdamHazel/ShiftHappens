@@ -1,3 +1,7 @@
+/**
+ * @class A representation of a car with corresponding values that are saved in database
+ */
+
 #ifndef RENTAL_H
 #define RENTAL_H
 

@@ -1,3 +1,7 @@
+/**
+ * @class addCar_D (D for dialog) object handles user interaction when user wishes to add a car
+ */
+
 #ifndef ADDCAR_D_H
 #define ADDCAR_D_H
 

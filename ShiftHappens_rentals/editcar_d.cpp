@@ -2,6 +2,10 @@
 #include "ui_editcar_d.h"
 #include "car.h"
 
+/**
+ * @brief Constructor for editCar_D
+ * @param QWidget parent
+ */
 editCar_D::editCar_D(QString& regNr, QWidget *parent)
     : QDialog(parent)
     , ui(new Ui::editCar_D)
@@ -14,6 +18,9 @@ editCar_D::editCar_D(QString& regNr, QWidget *parent)
     fetchCar(regNr);
 }
 
+/**
+ * @brief Deconstructor
+ */
 editCar_D::~editCar_D()
 {
     delete ui;

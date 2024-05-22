@@ -1,3 +1,0 @@
-#include "rental.h"
-
-

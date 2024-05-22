@@ -67,6 +67,12 @@ private slots:
 
     void on_actionE_xit_triggered();
 
+    void on_actionImport_Cars_triggered();
+
+    void on_actionImport_Customers_triggered();
+
+    void on_actionImport_Rentals_triggered();
+
 private:
     Ui::MainWindow *ui;
 };

@@ -1,6 +1,10 @@
 #include "addcustomer_d.h"
 #include "ui_addcustomer_d.h"
 
+/**
+ * @brief Constructor for addCustomer_D
+ * @param QWidget parent
+ */
 addCustomer_D::addCustomer_D(QWidget *parent)
     : QDialog(parent)
     , ui(new Ui::addCustomer_D)
@@ -8,6 +12,9 @@ addCustomer_D::addCustomer_D(QWidget *parent)
     ui->setupUi(this);
 }
 
+/**
+ * @brief Deconstructor
+ */
 addCustomer_D::~addCustomer_D()
 {
     delete ui;
@@ -24,6 +31,9 @@ void addCustomer_D::validateCustomer(){
     ui->buttonBox->button(QDialogButtonBox::Ok)->setEnabled(validated);
 }
 
+/**
+ * @brief Adds customer to database when "ok" is pressed (produces error message if unsuccesful)
+ */
 void addCustomer_D::on_buttonBox_accepted()
 {
     QString custName = (ui->lineEdit_custName->text()).toUpper();
