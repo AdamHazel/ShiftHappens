@@ -585,6 +585,7 @@ void importExporter::exportCustomers(shiftDatabase &dataB)
     }
     else
     {
+        allCustomers.clear();
         allCustomers = dataB.customer_fetchAll();
         QString customersdesktopPath = QString("%1/customers.csv")
                                            .arg(QStandardPaths::writableLocation(QStandardPaths::DesktopLocation));
@@ -638,6 +639,7 @@ void importExporter::exportCars(shiftDatabase &dataB)
     }
     else
     {
+        allCars.clear();
         allCars = dataB.cars_fetchAll();
         QString carsdesktopPath = QString("%1/cars.csv")
                                       .arg(QStandardPaths::writableLocation(QStandardPaths::DesktopLocation));
@@ -692,6 +694,7 @@ void importExporter::exportRentals(shiftDatabase &dataB)
     }
     else
     {
+        allRentals.clear();
         allRentals = dataB.rental_FetchAll();
         QString rentalsdesktopPath = QString("%1/rentals.csv")
                                       .arg(QStandardPaths::writableLocation(QStandardPaths::DesktopLocation));
