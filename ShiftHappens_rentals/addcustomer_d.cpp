@@ -10,6 +10,12 @@ addCustomer_D::addCustomer_D(QWidget *parent)
     , ui(new Ui::addCustomer_D)
 {
     ui->setupUi(this);
+
+    connect(ui->lineEdit_custName, &QLineEdit::textChanged, this, &addCustomer_D::validateCustomer);
+    connect(ui->lineEdit_street, &QLineEdit::textChanged, this, &addCustomer_D::validateCustomer);
+    connect(ui->lineEdit_city, &QLineEdit::textChanged, this, &addCustomer_D::validateCustomer);
+
+    ui->buttonBox->button(QDialogButtonBox::Ok)->setEnabled(false);
 }
 
 /**
