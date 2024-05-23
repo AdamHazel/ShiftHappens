@@ -399,7 +399,7 @@ void importExporter::importRentals(shiftDatabase &dataB)
 
                 uint rowInsertCount {0};
 
-                //WORK FROM HERE
+
                 for (auto &rent : allRentals)
                 {
                     if (rent.startDate < rent.endDate)

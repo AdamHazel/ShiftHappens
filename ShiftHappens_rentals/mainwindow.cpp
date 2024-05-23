@@ -248,7 +248,6 @@ void MainWindow::on_removeRentalB_clicked()
                                                   QMessageBox::Yes | QMessageBox::No)) {
         QSqlTableModel *tableModel = qobject_cast<QSqlTableModel*>(ui->tableView_rentals->model());
         uint rentalId = tableModel->record(selectedRow.row()).value("id").toUInt();
-        uint custId = tableModel->record(selectedRow.row()).value("custId").toUInt();
 
         if (dataB.rental_removeRental(rentalId)) {
             QMessageBox::information(this, "Success", "Rental is removed.");
