@@ -58,7 +58,6 @@ public:
     bool rental_removeRentalonCustomer(uint &custId);
     bool rental_removeRentalonCar(QString& RegNr);
     bool rental_completeRental(uint &id);
-    bool rental_uncompleteRental(uint &id);
     void rental_dropTable();
     void rental_resetTable();
 

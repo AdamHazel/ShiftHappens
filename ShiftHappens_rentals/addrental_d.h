@@ -19,18 +19,16 @@ class addrental_d : public QDialog
 {
     Q_OBJECT
 
-public:
-    explicit addrental_d(QWidget *parent = nullptr);
-    ~addrental_d();
-    void viewCustomers_rental();
-    void viewCars_rental();
-
 protected:
     shiftDatabase dataB;
     QSqlTableModel *customerTable = new QSqlTableModel(this);
     QSqlTableModel *carsTable = new QSqlTableModel(this);
 
-
+public:
+    explicit addrental_d(QWidget *parent = nullptr);
+    ~addrental_d();
+    void viewCustomers_rental();
+    void viewCars_rental();
 
 private slots:
     void on_pushButton_customerSearch_clicked();

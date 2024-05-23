@@ -504,10 +504,7 @@ void importExporter::create_templates()
     {
         std::ofstream customers;
         customers.open(custPath);
-        customers << "name,street,postcode,city\n"
-                    "\n\nDelete the following before importing:\n"
-                    "All values are separated by commas and non-numeric values (name, street and city) are placed between quotation marks"
-                    "\n       e.g \"Christian Auby\"";
+        customers << "name,street,postcode,city\n";
         customers.close();
     }
 
@@ -525,10 +522,7 @@ void importExporter::create_templates()
     {
         std::ofstream cars;
         cars.open(carsPath);
-        cars << "RegNr,brand,model,dayPrice\n"
-                "\n\nDelete the following before importing:\n"
-                "All values are separated by commas and non-numeric values (RegNr, brand, model) are placed between quotation marks\n"
-                "           e.g \"PY12345\"";
+        cars << "RegNr,brand,model,dayPrice\n";
         cars.close();
     }
 
@@ -546,11 +540,7 @@ void importExporter::create_templates()
     {
         std::ofstream rentals;
         rentals.open(rentalsPath);
-        rentals << "RegNr,custId,startDate,endDate,completed\n"
-                   "\n\nDelete the following before importing:\n"
-                   "All values are separated by commas and non-numeric values (RegNr, startDate, endDate)\n"
-                   "           e.g \"PY12345\"\n"
-                   "Dates have format dd-MM-yyyy";
+        rentals << "RegNr,custId,startDate,endDate,completed\n";
         rentals.close();
     }
 
