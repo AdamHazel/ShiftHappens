@@ -8,4 +8,4 @@ Adam Hazel
 Lasse Bjerkholt Olsen
 
 ## Reflections
-This was our first group project at UiA. Using Git as a version control system, getting used to using new tools (such as Qt) were challenging but fun. In hindsight, we would aim for better file structuring and a clearer architecture. 
+This was our first group project at UiA. Using Git as a version control system, getting used to using new tools (such as Qt) were challenging but fun. In hindsight, we would aim for better file structuring and a clearer architecture. We were also unsure whether each dialog that was created in Qt should be mapped on the class diagram. We decided to do this with risk of overcomplicating what the diagram actually communicates. 
